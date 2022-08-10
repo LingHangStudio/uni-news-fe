@@ -1,30 +1,63 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="horizon-menu">
+    <div class="horizon-menu-inner">
+      <div class="router-link-set">
+        <router-link to="/xuexiao">学校</router-link>
+        <router-link to="/jiaowu">教务</router-link>
+        <router-link to="/xueyuan">学院</router-link>
+        <router-link to="/tuanwei">团委</router-link>
+      </div>
+    </div>
+  </div>
+  <router-view></router-view>
 </template>
 
 <style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin: 0;
+  padding: 0;
 }
 
-nav {
-  padding: 30px;
+.horizon-menu {
+  box-sizing: border-box;
+  --horizon-menu-height: 40px;
+  width: 100%;
+  overflow-x: auto;
+  background-color: white;
+  border-bottom: 1px solid #e8e8e8;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+.horizon-menu-inner {
+  display: block;
+  overflow-x: auto;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.router-link-set {
+  display: flex;
+  width: max-content;
+}
+
+.router-link-set a {
+  display: block;
+  width: 90px;
+  height: var(--horizon-menu-height);
+  line-height: var(--horizon-menu-height);
+  color: #6e6e6e;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.router-link-set a.router-link-exact-active {
+  color: #42b983;
 }
 </style>
