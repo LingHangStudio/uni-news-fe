@@ -8,7 +8,13 @@ const routes = [
   {
     path: "/xuexiao",
     name: "学校",
-    component: () => import("../views/Xuexiao.vue")
+    component: () => import("../views/Xuexiao.vue"),
+    children: [
+      {
+        path: ":sub",
+        component: () => import('../views/XuexiaoSub.vue')
+      }
+    ]
   },
   {
     path: "/jiaowu",

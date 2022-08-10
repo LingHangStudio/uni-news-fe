@@ -14,6 +14,7 @@
 
 <style lang="scss">
 body {
+  background-color: #f6f6f6;
   margin: 0;
   padding: 0;
 }
@@ -53,11 +54,12 @@ body {
   height: var(--horizon-menu-height);
   line-height: var(--horizon-menu-height);
   color: #6e6e6e;
-  font-weight: bold;
   text-decoration: none;
+  font-size: 15px;
 }
 
-.router-link-set a.router-link-exact-active {
+.router-link-set a.router-link-active {
+  font-weight: bold;
   color: #42b983;
 }
 </style>
