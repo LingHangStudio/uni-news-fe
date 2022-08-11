@@ -23,19 +23,21 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin: 0;
   padding: 0;
 }
 
 .horizon-menu {
+  position: sticky;
+  top: 0;
   box-sizing: border-box;
   --horizon-menu-height: 40px;
   width: 100%;
   overflow-x: auto;
   background-color: white;
   border-bottom: 1px solid #e8e8e8;
+  z-index: 100;
 }
 
 .horizon-menu-inner {
@@ -56,6 +58,7 @@ body {
   color: #6e6e6e;
   text-decoration: none;
   font-size: 15px;
+  text-align: center;
 }
 
 .router-link-set a.router-link-active {
