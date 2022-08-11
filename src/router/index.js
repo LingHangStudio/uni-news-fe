@@ -9,6 +9,7 @@ const routes = [
     path: "/xuexiao",
     name: "学校",
     component: () => import("../views/Xuexiao.vue"),
+    redirect: "/xuexiao/yaowen",
     children: [
       {
         path: ":sub",
