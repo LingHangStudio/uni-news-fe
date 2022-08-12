@@ -35,7 +35,7 @@ export default {
 .news-card-1-pic-inner {
   display: flex;
   box-sizing: border-box;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -49,6 +49,7 @@ export default {
   font-size: 15px;
   font-weight: 800;
   margin-bottom: 16px;
+  color: #333333;
 }
 
 .news-card-1-pic-time {
@@ -61,8 +62,8 @@ export default {
 .news-card-1-pic-right {
   box-sizing: border-box;
   flex-shrink: 0;
-  width: 150px;
-  height: 90px;
+  width: 33%;
+  height: 80px;
 }
 
 .news-card-1-pic-right img {

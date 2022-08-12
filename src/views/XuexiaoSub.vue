@@ -1,16 +1,6 @@
 <template>
   <div>
-    <!-- <div class="news-gallery">
-      <div class="news-card-wrapper" v-for="obj in newsList">
-        <div class="news-card">
-          <div class="news-card-inner">
-            <div class="news-title">{{obj.title}}</div>
-            <div class="news-time">{{obj.time}}</div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    <div class="news-card-0-test">
+    <div class="card-gallery">
       <div class="news-card-selector" v-for="obj in newsList">
         <NewsCard3Pic
           v-if="is3PicCard(obj.piclist)"

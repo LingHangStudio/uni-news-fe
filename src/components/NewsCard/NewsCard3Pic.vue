@@ -39,7 +39,7 @@ export default {
 }
 
 .news-card-3-pic-inner {
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -47,6 +47,7 @@ export default {
   font-size: 15px;
   font-weight: 800;
   margin-bottom: 10px;
+  color: #333333;
 }
 
 .news-card-3-pic-pictures-bar {
@@ -60,6 +61,7 @@ export default {
   box-sizing: border-box;
   width: 33%;
   padding: 0 2px;
+  flex-grow: 1;
 }
 
 .news-card-3-pic-picture img {
