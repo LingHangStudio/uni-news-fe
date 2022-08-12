@@ -7,7 +7,7 @@
         <div class="news-card-1-pic-time">{{time}}</div>
       </div>
       <div class="news-card-1-pic-right">
-        <img src="https://one.oss.monkeyhbd.cn/monkeyhbd.jpg">
+        <img v-bind:src="picSrc">
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@
 export default {
   name: 'NewsCard1Pic',
 
-  props: ['title', 'time']
+  props: ['title', 'time', 'picSrc']
 }
 </script>
 
@@ -35,7 +35,7 @@ export default {
 .news-card-1-pic-inner {
   display: flex;
   box-sizing: border-box;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -55,6 +55,7 @@ export default {
   position: absolute;
   bottom: 0;
   font-size: 12px;
+  color: #8a8a8a;
 }
 
 .news-card-1-pic-right {
@@ -68,7 +69,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid gray;
   border-radius: 5px;
 }
 </style>

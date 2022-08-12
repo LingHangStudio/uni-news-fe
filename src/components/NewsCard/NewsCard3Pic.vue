@@ -5,13 +5,13 @@
       <div class="news-card-3-pic-title">{{title}}</div>
 	    <div class="news-card-3-pic-pictures-bar">
         <div class="news-card-3-pic-picture">
-          <img src="https://one.oss.monkeyhbd.cn/monkeyhbd.jpg">
+          <img v-bind:src="pic1Src">
         </div>
         <div class="news-card-3-pic-picture">
-          <img src="https://one.oss.monkeyhbd.cn/monkeyhbd.jpg">
+          <img v-bind:src="pic2Src">
         </div>
         <div class="news-card-3-pic-picture">
-          <img src="https://one.oss.monkeyhbd.cn/monkeyhbd.jpg">
+          <img v-bind:src="pic3Src">
         </div>
       </div>
       <div class="news-card-3-pic-time">{{time}}</div>
@@ -24,7 +24,7 @@
 export default {
   name: 'NewsCard3Pic',
 
-  props: ['title', 'time']
+  props: ['title', 'time', 'pic1Src', 'pic2Src', 'pic3Src']
 }
 </script>
 
@@ -39,7 +39,7 @@ export default {
 }
 
 .news-card-3-pic-inner {
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -66,7 +66,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid gray;
 }
 
 .news-card-3-pic-picture:first-child img {
@@ -81,5 +80,6 @@ export default {
 
 .news-card-3-pic-time {
   font-size: 12px;
+  color: #8a8a8a;
 }
 </style>
