@@ -3,34 +3,47 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    redirect: "/xuexiao"
+    redirect: "/contents"
   },
   {
-    path: "/xuexiao",
-    name: "学校",
-    component: () => import("../views/Xuexiao.vue"),
-    redirect: "/xuexiao/yaowen",
+    path: "/contents",
+    name: "目录",
+    component: () => import("../views/Contents.vue"),
+    redirect: "/contents/xuexiao",
     children: [
       {
-        path: ":sub",
-        component: () => import('../views/XuexiaoSub.vue')
+        path: "/contents/xuexiao",
+        name: "学校",
+        component: () => import("../views/Contents/Xuexiao.vue"),
+        redirect: "/contents/xuexiao/yaowen",
+        children: [
+          {
+            path: ":sub",
+            component: () => import('../views/Contents/XuexiaoSub.vue')
+          }
+        ]
+      },
+      {
+        path: "/contents/jiaowu",
+        name: "教务",
+        component: () => import("../views/Contents/Jiaowu.vue")
+      },
+      {
+        path: "/contents/xueyuan",
+        name: "学院",
+        component: () => import("../views/Contents/Xueyuan.vue")
+      },
+      {
+        path: "/contents/tuanwei",
+        name: "团委",
+        component: () => import("../views/Contents/Tuanwei.vue")
       }
     ]
   },
   {
-    path: "/jiaowu",
-    name: "教务",
-    component: () => import("../views/Jiaowu.vue")
-  },
-  {
-    path: "/xueyuan",
-    name: "学院",
-    component: () => import("../views/Xueyuan.vue")
-  },
-  {
-    path: "/tuanwei",
-    name: "团委",
-    component: () => import("../views/Tuanwei.vue")
+    path: '/article',
+    name: '文章详情',
+    component: () => import("../views/Article.vue")
   }
 ];
 

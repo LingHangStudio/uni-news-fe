@@ -3,11 +3,11 @@
     <div class="horizon-menu-2">
       <div class="horizon-menu-inner-2">
         <div class="router-link-set-2">
-          <router-link to="/xuexiao/yaowen">要闻</router-link>
-          <router-link to="/xuexiao/meiti">媒体</router-link>
-          <router-link to="/xuexiao/xueshu">学术</router-link>
-          <router-link to="/xuexiao/zonghe">综合</router-link>
-          <router-link to="/xuexiao/yuanxi">院系</router-link>
+          <router-link to="/contents/xuexiao/yaowen">要闻</router-link>
+          <router-link to="/contents/xuexiao/meiti">媒体</router-link>
+          <router-link to="/contents/xuexiao/xueshu">学术</router-link>
+          <router-link to="/contents/xuexiao/zonghe">综合</router-link>
+          <router-link to="/contents/xuexiao/yuanxi">院系</router-link>
         </div>
       </div>
     </div>
