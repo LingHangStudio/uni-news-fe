@@ -41,8 +41,8 @@ const routes = [
     ]
   },
   {
-    path: '/article',
-    name: '文章详情',
+    path: '/article/:id',
+    name: 'article',
     component: () => import("../views/Article.vue")
   }
 ];

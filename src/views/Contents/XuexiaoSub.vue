@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-gallery">
-      <div class="news-card-selector" v-for="obj in newsList">
+      <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)">
         <NewsCard3Pic
           v-if="is3PicCard(obj.piclist)"
           v-bind:title="obj.title"
@@ -28,6 +28,8 @@ import { xuexiaoNewsList } from '@/api/newsApi'
 import NewsCard0Pic from '@/components/NewsCard/NewsCard0Pic.vue'
 import NewsCard1Pic from '@/components/NewsCard/NewsCard1Pic.vue'
 import NewsCard3Pic from '@/components/NewsCard/NewsCard3Pic.vue'
+import router from '@/router'
+import ArticleStore from '@/store/ArticleStore'
 
 export default {
   name: 'XuexiaoSub',
@@ -96,6 +98,17 @@ export default {
       if (1 <= piclist.length && piclist.length <= 2) {
         return true
       }
+    },
+
+    openArticle: function(obj) {
+      console.log(obj.title)
+      ArticleStore[obj.id] = obj
+      router.push({
+        name: 'article',
+        params: {
+          id: obj.id
+        }
+      })
     }
   },
 
