@@ -14,7 +14,8 @@ function xuexiaoNewsList(sub) {
 
   var promise = newsAxios.post('/get_text', {
     tab1: tab1,
-    tab2: tab2
+    tab2: tab2,
+    page: 0
   })
 
   return promise

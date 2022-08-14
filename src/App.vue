@@ -36,7 +36,7 @@ body {
   width: 100%;
   overflow-x: auto;
   background-color: white;
-  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
   z-index: 100;
 }
 
