@@ -1,5 +1,13 @@
 <template>
-  <div v-bind:key="$route.fullPath">
+  <div class="article-page" v-bind:key="$route.fullPath">
+    <div class="article-head-bar">
+      <div class="article-head-bar-back-button" v-on:click="$router.back()">
+        <div class="article-head-bar-back-button-inner">
+          <svg t="1660669430811" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1356" width="200" height="200"><path d="M532.526499 904.817574L139.506311 511.797385 532.526499 118.777197c12.258185-12.258185 12.432147-32.892131-0.187265-45.51052-12.707416-12.707416-32.995485-12.703323-45.511543-0.187265L75.166957 484.739123c-7.120165 7.120165-10.163477 17.065677-8.990768 26.624381-1.500167 9.755178 1.5104 20.010753 8.990768 27.491121l411.660734 411.660734c12.258185 12.258185 32.892131 12.432147 45.511543-0.187265 12.707416-12.707416 12.7023-32.995485 0.187265-45.51052z" p-id="1357"></path></svg>
+        </div>
+      </div>
+      <div class="article-head-bar-text">正文</div>
+    </div>
     <div class="article-wrapper">
       <div class="article">
         <div class="article-title">
@@ -75,8 +83,50 @@ export default {
 <style>
 @import '@/assets/css/markdown.css';
 
+.article-page {
+  background-color: #ffffff;
+}
+
+.article-head-bar {
+  --article-head-bar-height: 40px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: var(--article-head-bar-height);
+  color: #333333;
+}
+
+.article-head-bar-back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-left: 8px;
+}
+
+.article-head-bar-back-button-inner {
+  box-sizing: border-box;
+  width: var(--article-head-bar-height);
+  height: var(--article-head-bar-height);
+  padding: 10px;
+}
+
+.article-head-bar-back-button svg {
+  width: 100%;
+  height: 100%;
+}
+
+.article-head-bar-text {
+  height: var(--article-head-bar-height);
+  line-height: var(--article-head-bar-height);
+  font-size: 16px;
+}
+
 .article-wrapper {
-  padding: 16px 0 0 0;
+  padding: 32px 0 0 0;
 }
 
 .article {
