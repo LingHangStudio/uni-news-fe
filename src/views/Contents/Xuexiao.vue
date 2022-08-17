@@ -12,11 +12,13 @@
       </div>
     </div>
     <div style="position: relative">
-      <transition name="fade">
-        <keep-alive>
-          <router-view class="fade-target" :key="$route.fullPath"></router-view>
-        </keep-alive>
-      </transition>
+      <router-view v-slot="{ Component }">
+        <transition name="fade">
+          <keep-alive>
+            <component class="fade-target" :is="Component" :key="$route.fullPath"></component>
+          </keep-alive>
+        </transition>
+      </router-view>
     </div>
   </div>
 </template>
