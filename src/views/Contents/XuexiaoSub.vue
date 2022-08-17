@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-gallery">
-      <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)">
+      <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)" v-bind:key="obj.id">
         <NewsCard3Pic
           v-if="is3PicCard(obj.piclist)"
           v-bind:title="obj.title"

@@ -11,7 +11,13 @@
         </div>
       </div>
     </div>
-    <router-view :key="$route.fullPath"></router-view>
+    <div style="position: relative">
+      <transition name="fade">
+        <keep-alive>
+          <router-view class="fade-target" :key="$route.fullPath"></router-view>
+        </keep-alive>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -22,6 +28,36 @@ export default {
 </script>
 
 <style>
+  .fade-enter-active, .fade-leave-active {
+    transition-property: left;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+    width: 100%;
+  }
+  .fade-enter-active {
+    left: 100%;
+  }
+  .fade-leave-active {
+    left: 0;
+  }
+  .fade-enter{
+    left: 100%;
+  }
+  .fade-leave-to{
+    left: -100%;
+  }
+  .fade-enter-to{
+    left: 0;
+  }
+  .fade-leave{
+    left: 0;
+  }
+
+  .fade-target {
+    position: absolute;
+    top: 0;
+  }
+
 .horizon-menu-2 {
   box-sizing: border-box;
   width: 100%;
