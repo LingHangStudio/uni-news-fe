@@ -13,9 +13,9 @@
     </div>
     <div style="position: relative">
       <router-view v-slot="{ Component }">
-        <transition name="fade">
+        <transition v-bind:name="transitionName">
           <keep-alive>
-            <component class="fade-target" :is="Component" :key="$route.fullPath"></component>
+            <component class="slide-target" :is="Component" :key="$route.fullPath"></component>
           </keep-alive>
         </transition>
       </router-view>
@@ -25,40 +25,90 @@
 
 <script>
 export default {
-  name: 'Xiaoyuan'
+  name: 'Xiaoyuan',
+
+  data: function() {
+    return {
+      index: {
+        'yaowen': 1,
+        'meiti': 2,
+        'xueshu': 3,
+        'zonghe': 4,
+        'yuanxi': 5
+      },
+
+      transitionName: 'slide-left'
+    }
+  },
+
+  watch: {
+    $route(to, from) {
+      if (this.index[to.params.sub] > this.index[from.params.sub]) {
+        this.transitionName = "slide-right";
+      } else {
+        this.transitionName = "slide-left";
+      }
+    },
+  }
 }
 </script>
 
 <style>
-  .fade-enter-active, .fade-leave-active {
-    transition-property: left;
-    transition-duration: 0.5s;
-    transition-timing-function: ease;
-    width: 100%;
-  }
-  .fade-enter-active {
-    left: 100%;
-  }
-  .fade-leave-active {
-    left: 0;
-  }
-  .fade-enter{
-    left: 100%;
-  }
-  .fade-leave-to{
-    left: -100%;
-  }
-  .fade-enter-to{
-    left: 0;
-  }
-  .fade-leave{
-    left: 0;
-  }
-
-  .fade-target {
-    position: absolute;
-    top: 0;
-  }
+.slide-right-enter-active, .slide-right-leave-active {
+  transition-property: left;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  width: 100%;
+}
+.slide-right-enter{
+  left: 100%;
+}
+.slide-right-enter-active {
+  left: 100%;
+}
+.slide-right-enter-to{
+  left: 0;
+}
+.slide-right-leave{
+  left: 0;
+}
+.slide-right-leave-active {
+  left: 0;
+}
+.slide-right-leave-to{
+  left: -100%;
+}
+.slide-left-enter-active, .slide-left-leave-active {
+  transition-property: left;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  width: 100%;
+}
+.slide-left-enter{
+  left: -100%;
+}
+.slide-left-enter-active {
+  left: -100%;
+}
+.slide-left-enter-to{
+  left: 0;
+}
+.slide-left-leave{
+  left: 0;
+}
+.slide-left-leave-active {
+  left: 0;
+}
+.slide-left-leave-to{
+  left: 100%;
+}
+.slide-right-enter-active.slide-target,
+.slide-right-leave-active.slide-target,
+.slide-left-enter-active.slide-target,
+.slide-left-leave-active.slide-target {
+  position: absolute;
+  top: 0;
+}
 
 .horizon-menu-2 {
   box-sizing: border-box;

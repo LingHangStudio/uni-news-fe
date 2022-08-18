@@ -37,20 +37,11 @@ export default {
   components: {
     NewsCard0Pic: NewsCard0Pic,
     NewsCard1Pic: NewsCard1Pic,
-    NewsCard3Pic: NewsCard3Pic,
-    NewsCard1Pic
-},
+    NewsCard3Pic: NewsCard3Pic
+  },
 
   data: function() {
     return {
-      box: {
-        'yaowen': '要闻',
-        'meiti': '媒体',
-        'xueshu': '学术',
-        'zonghe': '综合',
-        'yuanxi': '院系'
-      },
-      subLiteral: '要闻',
       newsList: [
         {
           "id": 1008,
@@ -113,9 +104,7 @@ export default {
   },
 
   mounted: function() {
-    this.subLiteral = this.box[this.$route.params.sub]
     var that = this
-
     var promise = xuexiaoNewsList(this.$route.params.sub)
     promise.then(function(res) {
       console.log(res.data)
