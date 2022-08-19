@@ -46,7 +46,7 @@ export default {
         var children = contentElement.children
         if (children != undefined && children.length > 0) {
           for (var idx = 0; idx < children.length; idx += 1) {
-            console.log(children[idx])
+            // console.log(children[idx])
             children[idx].style = undefined
             clearInlineStyleCore(children[idx])
           }
@@ -64,6 +64,7 @@ export default {
     console.log(ArticleStore[this.$route.params.id])
     this.articleObj = ArticleStore[this.$route.params.id]
     var originPiclist = this.articleObj.piclist
+    var that = this
     this.$nextTick(function () {
       // Code that will run only after the
       // entire view has been rendered
@@ -71,10 +72,11 @@ export default {
       for (var idx = 0; idx < originPiclist.length; idx += 1) {
         piclist.push(originPiclist[idx].pic)
       }
-      console.log(piclist)
+      // console.log(piclist)
       var contentElement = document.getElementById('content')
-      this.ficImgSrc(contentElement, piclist)
-      this.clearInlineStyle(contentElement)
+      console.log(contentElement)
+      that.ficImgSrc(contentElement, piclist)
+      that.clearInlineStyle(contentElement)
     })
   }
 }
@@ -126,7 +128,7 @@ export default {
 }
 
 .article-wrapper {
-  padding: 32px 0 0 0;
+  padding: 16px 0 40px 0;
 }
 
 .article {
@@ -145,6 +147,6 @@ export default {
 .article-time {
   font-size: 13px;
   color: #999999;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 </style>

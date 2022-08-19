@@ -1,12 +1,15 @@
 <template>
-  <router-view></router-view>
+  <router-view v-slot="{ Component }">
+      <component :is="Component"></component>
+  </router-view>
 </template>
 
-<style lang="scss">
+<style>
 body {
   background-color: #f6f6f6;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 #app {
