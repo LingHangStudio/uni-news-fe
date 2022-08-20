@@ -19,6 +19,7 @@ const routes = [
         children: [
           {
             path: ":sub",
+            name: "xuexiao-sub",
             component: () => import('../views/Contents/XuexiaoSub.vue')
           }
         ]

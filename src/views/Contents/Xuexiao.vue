@@ -43,10 +43,15 @@ export default {
 
   watch: {
     $route(to, from) {
-      if (this.index[to.params.sub] > this.index[from.params.sub]) {
-        this.transitionName = "slide-right";
-      } else {
-        this.transitionName = "slide-left";
+      if (to.name == 'xuexiao-sub' && from.name == 'xuexiao-sub') {
+        if (this.index[to.params.sub] > this.index[from.params.sub]) {
+          this.transitionName = "slide-right"
+        } else {
+          this.transitionName = "slide-left"
+        }
+      }
+      else {
+        this.transitionName = "none"
       }
     },
   }

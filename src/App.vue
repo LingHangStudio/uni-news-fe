@@ -1,6 +1,8 @@
 <template>
   <router-view v-slot="{ Component }">
+    <keep-alive exclude="Article">
       <component :is="Component"></component>
+    </keep-alive>
   </router-view>
 </template>
 
