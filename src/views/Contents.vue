@@ -1,35 +1,31 @@
 <template>
-  <div class="horizon-menu">
-    <div class="horizon-menu-inner">
-      <div class="router-link-set">
-        <router-link to="/contents/xuexiao">学校</router-link>
-        <router-link to="/contents/jiaowu">教务</router-link>
-        <router-link to="/contents/xueyuan">学院</router-link>
-        <router-link to="/contents/tuanwei">团委</router-link>
+  <div class="contents">
+    <div class="horizon-menu">
+      <div class="horizon-menu-inner">
+        <div class="router-link-set">
+          <router-link to="/contents/xuexiao">学校</router-link>
+          <router-link to="/contents/jiaowu">教务</router-link>
+          <router-link to="/contents/xueyuan">学院</router-link>
+          <router-link to="/contents/tuanwei">团委</router-link>
+        </div>
       </div>
     </div>
+    <router-view v-slot="{ Component }">
+      <transition>
+        <keep-alive>
+          <component :is="Component"></component>
+        </keep-alive>
+      </transition>
+    </router-view>
   </div>
-  <router-view v-slot="{ Component }">
-    <keep-alive>
-      <component :is="Component"></component>
-    </keep-alive>
-  </router-view>
 </template>
 
 <style lang="scss">
-body {
-  background-color: #f6f6f6;
-  margin: 0;
-  padding: 0;
-}
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin: 0;
-  padding: 0;
+.contents {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
 .horizon-menu {

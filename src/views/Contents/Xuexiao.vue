@@ -1,5 +1,5 @@
 <template>
-  <div class="xuexiao-sub">
+  <div>
     <div class="horizon-menu-2">
       <div class="horizon-menu-inner-2">
         <div class="router-link-set-2">
@@ -59,28 +59,29 @@ export default {
 </script>
 
 <style>
+/* <transition> */
 .slide-right-enter-active, .slide-right-leave-active {
   transition-property: left;
   transition-duration: 0.5s;
   transition-timing-function: ease;
   width: 100%;
 }
-.slide-right-enter{
+.slide-right-enter-from {
   left: 100%;
 }
 .slide-right-enter-active {
   left: 100%;
 }
-.slide-right-enter-to{
+.slide-right-enter-to {
   left: 0;
 }
-.slide-right-leave{
+.slide-right-leave-from {
   left: 0;
 }
 .slide-right-leave-active {
   left: 0;
 }
-.slide-right-leave-to{
+.slide-right-leave-to {
   left: -100%;
 }
 .slide-left-enter-active, .slide-left-leave-active {
@@ -114,11 +115,13 @@ export default {
   position: absolute;
   top: 0;
 }
+/* </transition> */
 
 .horizon-menu-2 {
   box-sizing: border-box;
   width: 100%;
   overflow-x: auto;
+  background-color: #f6f6f6;
 }
 
 .horizon-menu-inner-2 {

@@ -86,6 +86,13 @@ export default {
 @import '@/assets/css/markdown.css';
 
 .article-page {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.article-page {
   background-color: #ffffff;
 }
 
