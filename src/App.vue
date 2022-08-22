@@ -1,7 +1,7 @@
 <template>
   <main class="root-frame">
     <router-view v-slot="{ Component }">
-      <transition name="open-article">
+      <transition v-bind:name="transitionName">
         <keep-alive exclude="Article">
           <component class="root-transition-target" :is="Component"></component>
         </keep-alive>
@@ -9,6 +9,33 @@
     </router-view>
   </main>
 </template>
+
+<script>
+export default {
+  name: 'App',
+
+  data: function() {
+    return {
+      transitionName: 'open-article'
+    }
+  },
+
+  watch: {
+    $route(to, from) {
+      if (to.name == 'article') {
+        this.transitionName = "open-article"
+      }
+      else if (from.name == 'article') {
+        this.transitionName = "close-article"
+      }
+      else {
+        this.transitionName = "none"
+      }
+    }
+  }
+}
+</script>
+
 
 <style>
 .open-article-leave-active {
@@ -32,15 +59,28 @@
 .open-article-enter-to {
   left: 0;
 }
-/* .open-article-leave-from {
+.close-article-enter-active {
+  transition-delay: 0.5s;
+}
+.close-article-enter-active * {
+  transition-delay: 0.5s;
+}
+.close-article-leave-active {
+  transition-property: left;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  width: 100%;
+}
+.close-article-leave-from {
   left: 0;
 }
-.open-article-leave-active {
+.close-article-leave-active {
   left: 0;
 }
-.open-article-leave-to {
-  left: -100%;
-} */
+.close-article-leave-to {
+  left: 100%;
+}
+.close-article-leave-active.root-transition-target,
 .open-article-enter-active.root-transition-target {
   position: fixed;
   top: 0;

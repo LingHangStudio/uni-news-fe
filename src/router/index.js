@@ -7,7 +7,7 @@ const routes = [
   },
   {
     path: "/contents",
-    name: "目录",
+    name: "contents",
     component: () => import("../views/Contents.vue"),
     redirect: "/contents/xuexiao",
     children: [
