@@ -20,6 +20,30 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'Contents',
+
+  data: function() {
+    return {
+      'scrollTopMemery': 0
+    }
+  },
+
+  activated: function() {
+    var thisWindow = document.getElementsByClassName('contents')[0]
+    thisWindow.scrollTop = this.scrollTopMemery
+    console.log(thisWindow.scrollTop)
+  },
+
+  deactivated: function() {
+    var thisWindow = document.getElementsByClassName('contents')[0]
+    this.scrollTopMemery = thisWindow.scrollTop
+    console.log(thisWindow.scrollTop)
+  }
+}
+</script>
+
 <style lang="scss">
 .contents {
   position: fixed;
