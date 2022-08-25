@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .contents {
   position: fixed;
   width: 100%;

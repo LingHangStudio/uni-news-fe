@@ -1,23 +1,23 @@
 <template>
   <div class="news-card-3-pic-wrapper">
-  <div class="news-card-3-pic">
-    <div class="news-card-3-pic-inner">
-      <div class="news-card-3-pic-title">{{title}}</div>
-	    <div class="news-card-3-pic-pictures-bar">
-        <div class="news-card-3-pic-picture">
-          <img v-bind:src="pic1Src">
+    <div class="news-card-3-pic">
+      <div class="news-card-3-pic-inner">
+        <div class="news-card-3-pic-title">{{title}}</div>
+        <div class="news-card-3-pic-pictures-bar">
+          <div class="news-card-3-pic-picture">
+            <img v-bind:src="pic1Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+          </div>
+          <div class="news-card-3-pic-picture">
+            <img v-bind:src="pic2Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+          </div>
+          <div class="news-card-3-pic-picture">
+            <img v-bind:src="pic3Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+          </div>
         </div>
-        <div class="news-card-3-pic-picture">
-          <img v-bind:src="pic2Src">
-        </div>
-        <div class="news-card-3-pic-picture">
-          <img v-bind:src="pic3Src">
-        </div>
+        <div class="news-card-3-pic-time">{{time}}</div>
       </div>
-      <div class="news-card-3-pic-time">{{time}}</div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -40,13 +40,14 @@ export default {
 
 .news-card-3-pic-inner {
   padding: 12px 0;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 0.6px solid #e8e8e8;
 }
 
 .news-card-3-pic-title {
   font-size: 15px;
+  line-height: 20px;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #333333;
 }
 
@@ -54,7 +55,7 @@ export default {
   display: flex;
   width: 100%;
   height: 80px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .news-card-3-pic-picture {
@@ -68,6 +69,8 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background: #dddddd;
+  border: none;
 }
 
 .news-card-3-pic-picture:first-child img {
@@ -81,7 +84,7 @@ export default {
 }
 
 .news-card-3-pic-time {
-  font-size: 12px;
+  font-size: 11px;
   color: #8a8a8a;
 }
 </style>

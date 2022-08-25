@@ -1,17 +1,17 @@
 <template>
   <div class="news-card-1-pic-wrapper">
-  <div class="news-card-1-pic">
-    <div class="news-card-1-pic-inner">
-      <div class="news-card-1-pic-left">
-        <div class="news-card-1-pic-title">{{title}}</div>
-        <div class="news-card-1-pic-time">{{time}}</div>
-      </div>
-      <div class="news-card-1-pic-right">
-        <img v-bind:src="picSrc">
+    <div class="news-card-1-pic">
+      <div class="news-card-1-pic-inner">
+        <div class="news-card-1-pic-left">
+          <div class="news-card-1-pic-title">{{title}}</div>
+          <div class="news-card-1-pic-time">{{time}}</div>
+        </div>
+        <div class="news-card-1-pic-right">
+          <img v-bind:src="picSrc" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -36,7 +36,7 @@ export default {
   display: flex;
   box-sizing: border-box;
   padding: 12px 0;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 0.6px solid #e8e8e8;
 }
 
 .news-card-1-pic-left {
@@ -47,6 +47,7 @@ export default {
 
 .news-card-1-pic-title {
   font-size: 15px;
+  line-height: 20px;
   font-weight: 800;
   margin-bottom: 16px;
   color: #333333;
@@ -55,7 +56,7 @@ export default {
 .news-card-1-pic-time {
   position: absolute;
   bottom: 0;
-  font-size: 12px;
+  font-size: 11px;
   color: #8a8a8a;
 }
 
@@ -71,5 +72,6 @@ export default {
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
+  background: #dddddd;
 }
 </style>

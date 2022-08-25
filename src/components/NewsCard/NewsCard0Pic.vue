@@ -1,12 +1,12 @@
 <template>
   <div class="news-card-0-pic-wrapper">
-  <div class="news-card-0-pic">
-    <div class="news-card-0-pic-inner">
-      <div class="news-card-0-pic-title">{{title}}</div>
-      <div class="news-card-0-pic-time">{{time}}</div>
+    <div class="news-card-0-pic">
+      <div class="news-card-0-pic-inner">
+        <div class="news-card-0-pic-title">{{title}}</div>
+        <div class="news-card-0-pic-time">{{time}}</div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -29,18 +29,19 @@ export default {
 
 .news-card-0-pic-inner {
   padding: 12px 0;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 0.6px solid #e8e8e8;
 }
 
 .news-card-0-pic-title {
   font-size: 15px;
+  line-height: 20px;
   font-weight: 800;
   margin-bottom: 16px;
   color: #333333;
 }
 
 .news-card-0-pic-time {
-  font-size: 12px;
-  color: #8a8a8a;
+  font-size: 11px;
+  color: #a0a0a0;
 }
 </style>
