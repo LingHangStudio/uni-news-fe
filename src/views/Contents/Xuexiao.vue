@@ -120,14 +120,18 @@ export default {
 .horizon-menu-2 {
   box-sizing: border-box;
   width: 100%;
-  overflow-x: auto;
   background-color: #f6f6f6;
 }
 
 .horizon-menu-inner-2 {
   display: block;
   overflow-x: auto;
+  scrollbar-width: none;  /* Firefox */
   padding: 12px 0;
+}
+
+.horizon-menu-inner-2::-webkit-scrollbar {
+  display: none;  /* Chrome Safari */
 }
 
 .router-link-set-2 {
@@ -156,3 +160,4 @@ export default {
   color: #ffffff;
 }
 </style>
+

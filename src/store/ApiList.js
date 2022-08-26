@@ -10,6 +10,15 @@ var ApiList = {
   jiaowu: {
     tongzhigonggao: [2, 1],
     jiaoxuedongtai: [2, 2]
+  },
+
+  tuanwei: {
+    tuanqing: [4, 1],
+    jicengxinxi: [4, 2],
+    wenjianziliao: [4, 3],
+    xueshenghuodong: [4, 4],
+    redianjujiao: [4, 5],
+    tashanzhishi: [4, 6]
   }
 }
 

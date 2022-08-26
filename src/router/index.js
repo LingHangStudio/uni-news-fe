@@ -45,7 +45,15 @@ const routes = [
       {
         path: "/contents/tuanwei",
         name: "团委",
-        component: () => import("../views/Contents/Tuanwei.vue")
+        component: () => import("../views/Contents/Tuanwei.vue"),
+        redirect: "/contents/tuanwei/tuanqing",
+        children: [
+          {
+            path: ":sub",
+            name: "tuanwei-sub",
+            component: () => import('../views/Contents/TuanweiSub.vue')
+          }
+        ]
       }
     ]
   },
