@@ -47,7 +47,9 @@ export default {
         if (children != undefined && children.length > 0) {
           for (var idx = 0; idx < children.length; idx += 1) {
             // console.log(children[idx])
-            children[idx].style = undefined
+            children[idx].removeAttribute('style')
+            children[idx].removeAttribute('width')
+            children[idx].removeAttribute('height')
             clearInlineStyleCore(children[idx])
           }
         }
