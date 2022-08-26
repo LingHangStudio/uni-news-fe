@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { xuexiaoNewsList } from '@/api/newsApi'
+import { newsList } from '@/api/newsApi'
 import NewsCard0Pic from '@/components/NewsCard/NewsCard0Pic.vue'
 import NewsCard1Pic from '@/components/NewsCard/NewsCard1Pic.vue'
 import NewsCard3Pic from '@/components/NewsCard/NewsCard3Pic.vue'
@@ -38,7 +38,7 @@ export default {
     NewsCard3Pic: NewsCard3Pic
   },
 
-  props: ['subName'],
+  props: ['partName', 'subName'],
 
   data: function() {
     return {
@@ -74,7 +74,7 @@ export default {
 
   mounted: function() {
     var that = this
-    var promise = xuexiaoNewsList(this.subName)
+    var promise = newsList(this.partName, this.subName)
     promise.then(function(res) {
       console.log(res.data)
       that.newsList = res.data
@@ -84,28 +84,5 @@ export default {
 </script>
 
 <style>
-.news-card-wrapper {
-  background-color: white;
-}
-
-.news-card {
-  border-radius: 5px;
-  padding: 0 16px;
-}
-
-.news-card-inner {
-  padding: 8px 0;
-  border-bottom: 1px solid #e8e8e8;
-}
-
-.news-title {
-  font-size: 16px;
-  font-weight: 800;
-  margin-bottom: 16px;
-}
-
-.news-time {
-  font-size: 12px;
-}
 </style>
 

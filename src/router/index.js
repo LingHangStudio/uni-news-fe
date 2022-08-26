@@ -27,7 +27,15 @@ const routes = [
       {
         path: "/contents/jiaowu",
         name: "教务",
-        component: () => import("../views/Contents/Jiaowu.vue")
+        component: () => import("../views/Contents/Jiaowu.vue"),
+        redirect: "/contents/jiaowu/tongzhigonggao",
+        children: [
+          {
+            path: ":sub",
+            name: "jiaowu-sub",
+            component: () => import('../views/Contents/JiaowuSub.vue')
+          }
+        ]
       },
       {
         path: "/contents/xueyuan",

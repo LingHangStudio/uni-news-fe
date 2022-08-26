@@ -8,9 +8,9 @@ var newsAxios = axios.create({
 })
 
 
-function xuexiaoNewsList(sub) {
-	var tab1 = ApiList.xuexiao[sub][0]
-	var tab2 = ApiList.xuexiao[sub][1]
+function newsList(part, sub) {
+  var tab1 = ApiList[part][sub][0]
+	var tab2 = ApiList[part][sub][1]
 
   var promise = newsAxios.post('/get_text', {
     tab1: tab1,
@@ -23,5 +23,5 @@ function xuexiaoNewsList(sub) {
 
 
 export {
-  xuexiaoNewsList
+  newsList
 }
