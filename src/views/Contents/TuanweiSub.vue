@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardGallery part-name="xuexiao" v-bind:sub-name="subName()"></CardGallery>
+    <CardGallery part-name="tuanwei" v-bind:sub-name="subName()"></CardGallery>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import CardGallery from '@/components/NewsCard/CardGallery.vue'
 
 export default {
-  name: 'XuexiaoSub',
+  name: 'TuanweiSub',
 
   components: {
     CardGallery: CardGallery

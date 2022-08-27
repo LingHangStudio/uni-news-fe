@@ -7,7 +7,7 @@ const routes = [
   },
   {
     path: "/contents",
-    name: "目录",
+    name: "contents",
     component: () => import("../views/Contents.vue"),
     redirect: "/contents/xuexiao",
     children: [
@@ -19,6 +19,7 @@ const routes = [
         children: [
           {
             path: ":sub",
+            name: "xuexiao-sub",
             component: () => import("../views/Contents/XuexiaoSub.vue"),
           },
         ],
@@ -27,6 +28,14 @@ const routes = [
         path: "/contents/jiaowu",
         name: "教务",
         component: () => import("../views/Contents/Jiaowu.vue"),
+        redirect: "/contents/jiaowu/tongzhigonggao",
+        children: [
+          {
+            path: ":sub",
+            name: "jiaowu-sub",
+            component: () => import("../views/Contents/JiaowuSub.vue"),
+          },
+        ],
       },
       {
         path: "/contents/xueyuan",
@@ -37,6 +46,14 @@ const routes = [
         path: "/contents/tuanwei",
         name: "团委",
         component: () => import("../views/Contents/Tuanwei.vue"),
+        redirect: "/contents/tuanwei/tuanqing",
+        children: [
+          {
+            path: ":sub",
+            name: "tuanwei-sub",
+            component: () => import("../views/Contents/TuanweiSub.vue"),
+          },
+        ],
       },
     ],
   },

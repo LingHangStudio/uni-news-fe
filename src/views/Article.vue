@@ -46,8 +46,10 @@ export default {
         var children = contentElement.children
         if (children != undefined && children.length > 0) {
           for (var idx = 0; idx < children.length; idx += 1) {
-            console.log(children[idx])
-            children[idx].style = undefined
+            // console.log(children[idx])
+            children[idx].removeAttribute('style')
+            children[idx].removeAttribute('width')
+            children[idx].removeAttribute('height')
             clearInlineStyleCore(children[idx])
           }
         }
@@ -56,7 +58,31 @@ export default {
         }
       }
       clearInlineStyleCore(contentElement)
-    }
+    },
+
+    removeBlankLine: function(contentElement) {
+      function removeBlankLineCore(contentElement) {
+        var children = contentElement.children
+        if (children != undefined && children.length > 0) {
+          var deleteNodes = []
+          for (var idx = 0; idx < children.length; idx += 1) {
+            removeBlankLineCore(children[idx])
+            if (children[idx].tagName != 'IMG') {  // Exclude.
+              if (children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
+                deleteNodes.push(children[idx])
+              }
+            }
+          }
+          for (var idx2 = 0; idx2 < deleteNodes.length; idx2 += 1) {
+            contentElement.removeChild(deleteNodes[idx2])
+          }
+        }
+        else {
+          return null
+        }
+      }
+      removeBlankLineCore(contentElement)
+    },
   },
 
   mounted: function() {
@@ -64,6 +90,7 @@ export default {
     console.log(ArticleStore[this.$route.params.id])
     this.articleObj = ArticleStore[this.$route.params.id]
     var originPiclist = this.articleObj.piclist
+    var that = this
     this.$nextTick(function () {
       // Code that will run only after the
       // entire view has been rendered
@@ -71,10 +98,12 @@ export default {
       for (var idx = 0; idx < originPiclist.length; idx += 1) {
         piclist.push(originPiclist[idx].pic)
       }
-      console.log(piclist)
+      // console.log(piclist)
       var contentElement = document.getElementById('content')
-      this.ficImgSrc(contentElement, piclist)
-      this.clearInlineStyle(contentElement)
+      console.log(contentElement)
+      that.ficImgSrc(contentElement, piclist)
+      that.clearInlineStyle(contentElement)
+      that.removeBlankLine(contentElement)
     })
   }
 }
@@ -82,6 +111,13 @@ export default {
 
 <style>
 @import '@/assets/css/markdown.css';
+
+.article-page {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
 
 .article-page {
   background-color: #ffffff;
@@ -126,7 +162,7 @@ export default {
 }
 
 .article-wrapper {
-  padding: 32px 0 0 0;
+  padding: 16px 0 40px 0;
 }
 
 .article {
@@ -145,6 +181,6 @@ export default {
 .article-time {
   font-size: 13px;
   color: #999999;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 </style>
