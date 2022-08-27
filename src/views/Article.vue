@@ -58,7 +58,31 @@ export default {
         }
       }
       clearInlineStyleCore(contentElement)
-    }
+    },
+
+    removeBlankLine: function(contentElement) {
+      function removeBlankLineCore(contentElement) {
+        var children = contentElement.children
+        if (children != undefined && children.length > 0) {
+          var deleteNodes = []
+          for (var idx = 0; idx < children.length; idx += 1) {
+            removeBlankLineCore(children[idx])
+            if (children[idx].tagName != 'IMG') {  // Exclude.
+              if (children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
+                deleteNodes.push(children[idx])
+              }
+            }
+          }
+          for (var idx2 = 0; idx2 < deleteNodes.length; idx2 += 1) {
+            contentElement.removeChild(deleteNodes[idx2])
+          }
+        }
+        else {
+          return null
+        }
+      }
+      removeBlankLineCore(contentElement)
+    },
   },
 
   mounted: function() {
@@ -79,6 +103,7 @@ export default {
       console.log(contentElement)
       that.ficImgSrc(contentElement, piclist)
       that.clearInlineStyle(contentElement)
+      that.removeBlankLine(contentElement)
     })
   }
 }
