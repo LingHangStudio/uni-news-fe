@@ -67,8 +67,9 @@ export default {
           var deleteNodes = []
           for (var idx = 0; idx < children.length; idx += 1) {
             removeBlankLineCore(children[idx])
-            if (children[idx].tagName != 'IMG') {  // Exclude.
-              if (children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
+            if (children[idx].tagName != 'IMG' && children[idx].tagName != 'DIV') {  // Exclude.
+              // Also remove <style> tag.
+              if (children[idx].tagName == 'STYLE' || children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
                 deleteNodes.push(children[idx])
               }
             }
