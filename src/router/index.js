@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    redirect: "/contents"
+    redirect: "/contents",
   },
   {
     path: "/contents",
@@ -19,41 +19,41 @@ const routes = [
         children: [
           {
             path: ":sub",
-            component: () => import('../views/Contents/XuexiaoSub.vue')
-          }
-        ]
+            component: () => import("../views/Contents/XuexiaoSub.vue"),
+          },
+        ],
       },
       {
         path: "/contents/jiaowu",
         name: "教务",
-        component: () => import("../views/Contents/Jiaowu.vue")
+        component: () => import("../views/Contents/Jiaowu.vue"),
       },
       {
         path: "/contents/xueyuan",
         name: "学院",
-        component: () => import("../views/Contents/Xueyuan.vue")
+        component: () => import("../views/Contents/Xueyuan.vue"),
       },
       {
         path: "/contents/tuanwei",
         name: "团委",
-        component: () => import("../views/Contents/Tuanwei.vue")
-      }
-    ]
+        component: () => import("../views/Contents/Tuanwei.vue"),
+      },
+    ],
   },
   {
-    path: '/article/:id',
-    name: 'article',
-    component: () => import("../views/Article.vue")
-  }
+    path: "/article/:id",
+    name: "article",
+    component: () => import("../views/Article.vue"),
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 });
 
-router.afterEach((to,from,next) => {
-  window.scrollTo(0,0);
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0);
 });
 
 export default router;
