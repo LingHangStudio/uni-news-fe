@@ -1,5 +1,5 @@
 <template>
-  <div class="contents">
+  <div id="contents" class="contents">
     <div class="horizon-menu">
       <div class="horizon-menu-inner">
         <div class="router-link-set">
@@ -50,6 +50,10 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
 }
 
 .horizon-menu {
