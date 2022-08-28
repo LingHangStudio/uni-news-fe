@@ -93,4 +93,38 @@ export default {
   font-weight: bold;
   color: #42b983;
 }
+
+/* Loading Animation */
+.load-container {
+  display: block;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  left: 50%;
+  top: 40vh;
+  transform: translate(-50%, -50%);
+}
+
+.load {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border: 4px solid transparent;
+  border-top-color: #42b983;
+  border-left-color: #42b983;
+  border-bottom-color: #42b983;
+  animation: circle 1s infinite linear;
+  -webkit-animation: circle 1s infinite linear; /* Safari 和 Chrome */
+  border-radius: 50%
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg)
+  }
+}
 </style>

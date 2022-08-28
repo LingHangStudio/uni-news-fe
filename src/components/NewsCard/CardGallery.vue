@@ -1,5 +1,8 @@
 <template>
   <div class="card-gallery">
+    <div v-if="status=='loading'" class="load-container">
+      <span class="load"></span>
+    </div>
     <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)" v-bind:key="obj.id">
       <NewsCard3Pic
         v-if="is3PicCard(obj.piclist)"
@@ -42,6 +45,8 @@ export default {
 
   data: function() {
     return {
+      status: 'loading',
+
       newsList: [
       ]
     }
@@ -78,6 +83,7 @@ export default {
     promise.then(function(res) {
       console.log(res.data)
       that.newsList = res.data
+      that.status = 'initiated'
     })
   }
 }
