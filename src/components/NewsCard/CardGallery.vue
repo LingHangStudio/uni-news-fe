@@ -3,6 +3,7 @@
     <div v-if="status=='loading'" class="load-container">
       <span class="load"></span>
     </div>
+    <div v-if="status=='initial-error'">加载错误</div>
     <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)" v-bind:key="obj.id">
       <NewsCard3Pic
         v-if="is3PicCard(obj.piclist)"
@@ -45,6 +46,9 @@ export default {
 
   data: function() {
     return {
+      // loading
+      // initiated
+      // initial-error
       status: 'loading',
 
       newsList: [
@@ -53,6 +57,22 @@ export default {
   },
 
   methods: {
+    init: function(idx=0) {
+      var that = this
+      console.log(that)
+      var promise = newsList(this.partName, this.subName)
+      console.log(promise)
+      promise.then(function(res) {
+        console.log(res.data)
+        that.newsList = res.data
+        that.status = 'initiated'
+      })
+      promise.catch(function(err) {
+        console.log('Error:', err)
+        that.status = 'initial-error'
+      })
+    },
+
     is3PicCard: function(piclist) {
       if (piclist.length >= 3) {
         return true
@@ -77,14 +97,8 @@ export default {
     }
   },
 
-  mounted: function() {
-    var that = this
-    var promise = newsList(this.partName, this.subName)
-    promise.then(function(res) {
-      console.log(res.data)
-      that.newsList = res.data
-      that.status = 'initiated'
-    })
+  mounted: function() { 
+    this.init()
   }
 }
 </script>
