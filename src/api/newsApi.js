@@ -9,6 +9,7 @@ var newsAxios = axios.create({
 
 
 function newsList(part, sub) {
+  console.log(part, sub)
   var tab1 = ApiList[part][sub][0]
 	var tab2 = ApiList[part][sub][1]
 

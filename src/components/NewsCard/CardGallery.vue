@@ -46,10 +46,11 @@ export default {
 
   data: function() {
     return {
+      // created
       // loading
       // initiated
       // initial-error
-      status: 'loading',
+      status: 'created',
 
       newsList: [
       ]
@@ -97,8 +98,12 @@ export default {
     }
   },
 
-  activated: function() { 
-    this.init()
+  activated: function() {
+    console.log('status:', this.status)
+    if (this.status == 'created') {
+      this.status = 'loading'
+      this.init()
+    }
   }
 }
 </script>

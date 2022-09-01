@@ -12,7 +12,7 @@
       <router-view v-slot="{ Component }">
         <transition v-bind:name="transitionName">
           <keep-alive>
-            <component class="slide-target" :is="Component" :key="$route.fullPath"></component>
+            <component class="slide-target" v-if="$route.name=='jiaowu-sub'" :is="Component" :key="$route.fullPath"></component>
           </keep-alive>
         </transition>
       </router-view>
