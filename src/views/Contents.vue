@@ -1,5 +1,5 @@
 <template>
-  <div class="contents">
+  <div id="contents" class="contents">
     <div class="horizon-menu">
       <div class="horizon-menu-inner">
         <div class="router-link-set">
@@ -12,9 +12,9 @@
     </div>
     <router-view v-slot="{ Component }">
       <transition>
-        <keep-alive>
+        <!-- <keep-alive> -->
           <component :is="Component"></component>
-        </keep-alive>
+        <!-- </keep-alive> -->
       </transition>
     </router-view>
   </div>
@@ -50,6 +50,10 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
 }
 
 .horizon-menu {
@@ -88,5 +92,39 @@ export default {
 .router-link-set a.router-link-active {
   font-weight: bold;
   color: #42b983;
+}
+
+/* Loading Animation */
+.load-container {
+  display: block;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  left: 50%;
+  top: 40vh;
+  transform: translate(-50%, -50%);
+}
+
+.load {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border: 4px solid transparent;
+  border-top-color: #42b983;
+  border-left-color: #42b983;
+  border-bottom-color: #42b983;
+  animation: circle 1s infinite linear;
+  -webkit-animation: circle 1s infinite linear; /* Safari 和 Chrome */
+  border-radius: 50%
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg)
+  }
 }
 </style>

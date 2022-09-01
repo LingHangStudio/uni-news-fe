@@ -41,6 +41,14 @@ const routes = [
         path: "/contents/xueyuan",
         name: "学院",
         component: () => import("../views/Contents/Xueyuan.vue"),
+        // redirect: "/contents/xueyuan/cailiaoyuyejinxueyuan",
+        children: [
+          {
+            path: ":sub",
+            name: "xueyuan-sub",
+            component: () => import("../views/Contents/XueyuanSub.vue"),
+          },
+        ],
       },
       {
         path: "/contents/tuanwei",
