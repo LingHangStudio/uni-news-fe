@@ -97,7 +97,7 @@ export default {
     }
   },
 
-  mounted: function() { 
+  activated: function() { 
     this.init()
   }
 }
