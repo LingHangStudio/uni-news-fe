@@ -9,14 +9,14 @@
         v-if="is3PicCard(obj.piclist)"
         v-bind:title="obj.title"
         v-bind:time="obj.time"
-        v-bind:pic-1-src="obj.piclist[0].pic"
-        v-bind:pic-2-src="obj.piclist[1].pic"
-        v-bind:pic-3-src="obj.piclist[2].pic"></NewsCard3Pic>
+        v-bind:pic-1-src="picUrl(obj.piclist[0].pic)"
+        v-bind:pic-2-src="picUrl(obj.piclist[1].pic)"
+        v-bind:pic-3-src="picUrl(obj.piclist[2].pic)"></NewsCard3Pic>
       <NewsCard1Pic
         v-else-if="is1PicCard(obj.piclist)"
         v-bind:title="obj.title"
         v-bind:time="obj.time"
-        v-bind:pic-src="obj.piclist[0].pic"></NewsCard1Pic>
+        v-bind:pic-src="picUrl(obj.piclist[0].pic)"></NewsCard1Pic>
       <NewsCard0Pic
         v-else
         v-bind:title="obj.title"
@@ -95,6 +95,24 @@ export default {
           id: obj.id
         }
       })
+    },
+
+    picUrl: function(originUrl) {
+      if (originUrl == 'https://www.wust.edu.cn/_ueditor/themes/default/images/icon_doc.gif') {
+        return require('@/assets/img/img-word.png')
+      }
+      else if (originUrl == 'https://www.wust.edu.cn/_ueditor/themes/default/images/icon_rar.gif') {
+        return require('@/assets/img/img-zip.png')
+      }
+      else if (originUrl == 'https://www.wust.edu.cn/_ueditor/themes/default/images/icon_xls.gif') {
+        return require('@/assets/img/img-excel.png')
+      }
+      else if (originUrl == 'https://www.wust.edu.cn/_ueditor/themes/default/images/icon_pdf.gif') {
+        return require('@/assets/img/img-pdf.png')
+      }
+      else {
+        return originUrl
+      }
     }
   },
 
