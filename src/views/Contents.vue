@@ -40,6 +40,19 @@ export default {
     var thisWindow = document.getElementsByClassName('contents')[0]
     this.scrollTopMemery = thisWindow.scrollTop
     console.log(thisWindow.scrollTop)
+  },
+
+  watch: {
+    $route(to, from) {
+      console.log('From:', from.name)
+      console.log('To:', to.name)
+      var thisWindow = document.getElementsByClassName('contents')[0]
+      console.log(thisWindow)
+      var partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
+      if (partNames.indexOf(to.name) != -1 && partNames.indexOf(from.name) != -1 && to.name != from.name) {
+        thisWindow.scrollTop = 0
+      }
+    }
   }
 }
 </script>
