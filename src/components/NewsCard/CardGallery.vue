@@ -157,7 +157,7 @@ export default {
 
     touchendHandle: function(e) {
       var updateIndicator = document.getElementById('update-indicator')
-      if (updateIndicator.offsetTop > 60) {  // 刷新页面
+      if (updateIndicator.offsetTop > 70) {  // 刷新页面
         document.getElementsByClassName('update-inner')[0].style.animation = 'circle 1s infinite linear'
         this.init().then(
           function() {

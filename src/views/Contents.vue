@@ -105,4 +105,47 @@ export default {
   font-weight: bold;
   color: #42b983;
 }
+
+.horizon-menu-2 {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: #f6f6f6;
+}
+
+.horizon-menu-inner-2 {
+  display: block;
+  overflow-x: auto;
+  scrollbar-width: none;  /* Firefox */
+  padding: 10px 0;
+}
+
+.horizon-menu-inner-2::-webkit-scrollbar {
+  display: none;  /* Chrome Safari */
+}
+
+.router-link-set-2 {
+  padding: 0 12px;
+  display: flex;
+  width: max-content;
+}
+
+.router-link-set-2 a {
+  display: block;
+  height: var(--horizon-menu-height);
+  line-height: var(--horizon-menu-height);
+  color: #6e6e6e;
+  text-decoration: none;
+  font-size: 13px;
+  background: white;
+  border-radius: 5px;
+  padding: 4px 10px;
+  margin: 0 4px;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.router-link-set-2 a.router-link-active {
+  font-weight: bold;
+  background: linear-gradient(45deg, #42b983, #86e6e8);
+  color: #ffffff;
+}
 </style>

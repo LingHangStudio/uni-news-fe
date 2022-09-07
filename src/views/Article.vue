@@ -18,7 +18,9 @@
         <div class="article-link-container">
           <div class="article-link-bar">
             <div class="article-link-bar-title">原文</div>
-            <div class="article-link-bar-text">https://www.monkeyhbd.com</div>
+            <div class="article-link-bar-text">
+              <span>{{articleObj.href}}</span>
+            </div>
             <div class="article-link-bar-widgets">
               <div class="article-link-bar-widget-copy-text" v-on:click="copyHrefToClipboard()">
                 <img v-bind:src="require('@/assets/icon/icon-copy-efefef.svg')">
@@ -110,7 +112,7 @@ export default {
     },
 
     copyHrefToClipboard: function() {
-      this.copyToClipboard(document.getElementsByClassName('article-link-bar-text')[0].innerHTML)
+      this.copyToClipboard(document.querySelector('.article-link-bar-text span').innerHTML)
     },
 
     strDate: function(year, month, day) {
@@ -121,7 +123,6 @@ export default {
   mounted: async function() {
     this.id = this.$route.params.id
     console.log(this.id)
-    // this.articleObj = ArticleStore[this.$route.params.id]
     var that = this
     await newsApi.newsContent(this.id)
     .then(function(res) {
@@ -228,11 +229,11 @@ export default {
 }
 
 :root {
-  --x-bar-line-height: 24px;
+  --x-bar-line-height: 26px;
 }
 
 .article-link-container {
-  margin-top: 24px;
+  margin-top: 32px;
   background: linear-gradient(to right, rgb(0, 50, 255), rgb(185, 199, 255));
   padding: 4px 0;
   border-radius: 8px;
@@ -240,7 +241,7 @@ export default {
 
 .article-link-bar {
   display: flex;
-  padding: 0 8px;
+  padding: 0 10px;
   height: var(--x-bar-line-height);
   line-height: var(--x-bar-line-height);
   font-size: 14px;
@@ -258,10 +259,16 @@ export default {
 .article-link-bar-text {
   flex-grow: 1;
   flex-shrink: 1;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 4px;
+}
+
+.article-link-bar-text span {
+  display: inline-block;
   padding: 0 8px;
+  width: max-content;
 }
 
 .article-link-bar-widgets {
