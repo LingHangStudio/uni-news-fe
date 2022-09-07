@@ -85,7 +85,13 @@ export default {
             removeBlankLineCore(children[idx])
             if (children[idx].tagName != 'IMG' && children[idx].tagName != 'DIV') {  // Exclude.
               // Also remove <style> tag.
-              if (children[idx].tagName == 'STYLE' || children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
+              if (children[idx].tagName == 'STYLE'
+              || children[idx].innerHTML == ''
+              || children[idx].innerHTML == '&nbsp;'
+              || children[idx].innerHTML == '&nbsp;&nbsp;'
+              || children[idx].innerHTML == '　&nbsp;'
+              || children[idx].innerHTML == '&nbsp; &nbsp;&nbsp;'
+              || children[idx].innerHTML == '<br>') {
                 deleteNodes.push(children[idx])
               }
             }

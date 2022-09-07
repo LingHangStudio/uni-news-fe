@@ -87,11 +87,14 @@ export default {
 
 .router-link-set {
   display: flex;
-  width: max-content;
+  /* width: max-content; */
+  width: 100%;
 }
 
 .router-link-set a {
   display: block;
+  flex-grow: 1;
+  flex-shrink: 1;
   width: 90px;
   height: var(--horizon-menu-height);
   line-height: var(--horizon-menu-height);
