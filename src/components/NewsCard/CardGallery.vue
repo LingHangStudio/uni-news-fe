@@ -23,6 +23,9 @@
         v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"></NewsCard0Pic>
     </div>
   </div>
+  <div id="update-indicator" class="update-indicator">
+    <span class="update-inner"></span>
+  </div>
 </template>
 
 <script>
@@ -53,14 +56,15 @@ export default {
       status: 'created',
 
       newsList: [
-      ]
+      ],
+
+      updateTouchStartPosition: -100
     }
   },
 
   methods: {
-    init: function(idx=0) {
+    init: async function(idx=0) {
       var that = this
-      console.log(that)
       var promise = null
       if (this.typeName == 1) {
         promise = newsApi.newsList(this.partName, this.subName, 20, 0)
@@ -71,13 +75,13 @@ export default {
       promise.then(function(res) {
         console.log(res.data)
         that.newsList = res.data.newsList
-        console.log(that.newsList)
         that.status = 'initiated'
       })
       promise.catch(function(err) {
         console.log('Error:', err)
         that.status = 'initial-error'
       })
+      return promise
     },
 
     is3PicCard: function(piclist) {
@@ -131,6 +135,48 @@ export default {
       else {
         return `${year}年${month}月${day}日`
       }
+    },
+
+    touchstartHandle: function(e) {
+      var contents = document.getElementById('contents')
+      if (contents.scrollTop == 0) {
+        this.updateTouchStartPosition = e.touches[0].pageY
+      }
+      var updateIndicator = document.getElementById('update-indicator')
+      updateIndicator.style.transition = ''
+    },
+
+    touchmoveHandle: function(e) {
+      if (this.updateTouchStartPosition > 0) {
+        var offset = e.touches[0].pageY - this.updateTouchStartPosition
+        var indicatorTop = 0 + offset * 0.5
+        var updateIndicator = document.getElementById('update-indicator')
+        updateIndicator.style.top = `${indicatorTop}px`
+      }
+    },
+
+    touchendHandle: function(e) {
+      var updateIndicator = document.getElementById('update-indicator')
+      if (updateIndicator.offsetTop > 60) {  // 刷新页面
+        document.getElementsByClassName('update-inner')[0].style.animation = 'circle 1s infinite linear'
+        this.init().then(
+          function() {
+            setTimeout(function() {
+              updateIndicator.style.top = '0px'
+              setTimeout(function() {
+                document.getElementsByClassName('update-inner')[0].style.animation = ''
+              }, 300)
+            }, 500)
+          }
+        )
+        updateIndicator.style.transition = 'top 0.3s'
+        updateIndicator.style.top = '70px'
+      }
+      else {
+        updateIndicator.style.transition = 'top 0.3s'
+        updateIndicator.style.top = '0px'
+      }
+      this.updateTouchStartPosition = -100
     }
   },
 
@@ -140,9 +186,81 @@ export default {
       this.status = 'loading'
       this.init()
     }
+    var contents = document.getElementById('contents')
+    contents.addEventListener('touchstart', this.touchstartHandle)
+    contents.addEventListener('touchmove', this.touchmoveHandle)
+    contents.addEventListener('touchend', this.touchendHandle)
+  },
+
+  deactivated: function() {
+    var contents = document.getElementById('contents')
+    contents.removeEventListener('touchstart', this.touchstartHandle)
+    contents.removeEventListener('touchmove', this.touchmoveHandle)
+    contents.removeEventListener('touchend', this.touchendHandle)
   }
 }
 </script>
 
 <style>
+/* Loading Animation */
+.load-container {
+  display: block;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  left: 50%;
+  top: 40vh;
+  transform: translate(-50%, -50%);
+}
+
+.load {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border: 4px solid transparent;
+  border-top-color: #42b983;
+  border-left-color: #42b983;
+  border-bottom-color: #42b983;
+  animation: circle 1s infinite linear;
+  border-radius: 50%
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg)
+  }
+}
+
+/* Update */
+.update-indicator {
+  box-sizing: border-box;
+  padding: 5px;
+  position: fixed;
+  background-color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+  z-index: 80;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.update-inner {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border: 3px solid transparent;
+  border-right-color: #42b983;
+  border-left-color: #42b983;
+  border-bottom-color: #42b983;
+  border-radius: 50%
+}
 </style>

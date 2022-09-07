@@ -3,7 +3,7 @@
     <div class="xueyuan-menu-bar">
       <div class="xueyuan-menu-bar-inner">
         <div class="xueyuan-selector-container">
-          <div class="xueyuan-selector close"
+          <div class="xueyuan-selector open"
             @click="toggleXueyuanSelector">
             <div class="xueyuan-name">{{houseName()}}</div>
             <div class="xueyuan-list">
@@ -153,9 +153,10 @@ export default {
 
   watch: {
     $route: function(to, from) {
-      if ((to.name == 'xueyuan-sub' || to.name == 'xueyuan') && (from.name == 'xueyuan-sub' || from.name == 'xueyuan'))
-      if (to.params.part != from.params.part) {
-        this.updateHouseSub()
+      if ((to.name == 'xueyuan-sub' || to.name == 'xueyuan') && (from.name == 'xueyuan-sub' || from.name == 'xueyuan')) {
+        if (to.params.part != from.params.part) {
+          this.updateHouseSub()
+        }
       }
     }
   }
