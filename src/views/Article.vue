@@ -13,8 +13,8 @@
         <div class="article-title">
           <h1>{{articleObj.title}}</h1>
         </div>
-        <div class="article-time">{{articleObj.time}}</div>
-        <div id="content" class="article-content content" v-html="articleObj.text"></div>
+        <div class="article-time">发布时间：{{articleObj.dateStr}}</div>
+        <div id="content" class="article-content content" v-html="articleObj.content"></div>
         <div class="article-link-container">
           <div class="article-link-bar">
             <div class="article-link-bar-title">原文</div>
@@ -33,12 +33,15 @@
 
 <script>
 import ArticleStore from '@/store/ArticleStore'
+import newsApi from '@/api/newsApi'
 
 export default {
   name: 'Article',
 
   data: function() {
     return {
+      id: '0-0-0-0',
+
       articleObj: {}
     }
   },
@@ -108,28 +111,42 @@ export default {
 
     copyHrefToClipboard: function() {
       this.copyToClipboard(document.getElementsByClassName('article-link-bar-text')[0].innerHTML)
+    },
+
+    strDate: function(year, month, day) {
+      return `${year}-${month}-${day}`
     }
   },
 
-  mounted: function() {
-    console.log(this.$route.params.id)
-    console.log(ArticleStore[this.$route.params.id])
-    this.articleObj = ArticleStore[this.$route.params.id]
-    var originPiclist = this.articleObj.piclist
+  mounted: async function() {
+    this.id = this.$route.params.id
+    console.log(this.id)
+    // this.articleObj = ArticleStore[this.$route.params.id]
     var that = this
-    this.$nextTick(function () {
-      // Code that will run only after the
-      // entire view has been rendered
-      var piclist = []
-      for (var idx = 0; idx < originPiclist.length; idx += 1) {
-        piclist.push(originPiclist[idx].pic)
-      }
-      // console.log(piclist)
-      var contentElement = document.getElementById('content')
-      console.log(contentElement)
-      that.ficImgSrc(contentElement, piclist)
-      that.clearInlineStyle(contentElement)
-      that.removeBlankLine(contentElement)
+    await newsApi.newsContent(this.id)
+    .then(function(res) {
+      that.articleObj = res.data
+      that.articleObj.dateStr = that.strDate(
+        that.articleObj.date['year'],
+        that.articleObj.date['month'],
+        that.articleObj.date['day']
+      )
+      console.log(that.articleObj)
+      var originPiclist = that.articleObj.picList
+      that.$nextTick(function () {
+        // Code that will run only after the
+        // entire view has been rendered
+        var piclist = []
+        for (var idx = 0; idx < originPiclist.length; idx += 1) {
+          piclist.push(originPiclist[idx])
+        }
+        console.log(piclist)
+        var contentElement = document.getElementById('content')
+        console.log(contentElement)
+        that.ficImgSrc(contentElement, piclist)
+        that.clearInlineStyle(contentElement)
+        that.removeBlankLine(contentElement)
+      })
     })
   }
 }

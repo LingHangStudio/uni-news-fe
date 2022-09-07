@@ -41,12 +41,16 @@ const routes = [
         path: "/contents/xueyuan",
         name: "xueyuan",
         component: () => import("../views/Contents/Xueyuan.vue"),
-        // redirect: "/contents/xueyuan/cailiaoyuyejinxueyuan",
         children: [
           {
-            path: "/contents/xueyuan/:sub",
-            name: "xueyuan-sub",
-            component: () => import('../views/Contents/XueyuanSub.vue')
+            path: "/contents/xueyuan/:part",
+            children: [
+              {
+                path: "/contents/xueyuan/:part/:sub",
+                name: "xueyuan-sub",
+                component: () => import('../views/Contents/XueyuanSub.vue')
+              }
+            ]
           }
         ]
       },
