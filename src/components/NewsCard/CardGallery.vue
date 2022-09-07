@@ -23,6 +23,16 @@
         v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"></NewsCard0Pic>
     </div>
   </div>
+  <div id="appending-indicator" class="appending-indicator">
+    <div class="appending-indicator-appending" v-if="status == 'appending'">
+      <div class="appending-indicator-appending-inner">
+        <span></span>
+      </div>
+    </div>
+    <div class="appending-indicator-no-more" v-if="status == 'no-more'">
+      已加载全部
+    </div>
+  </div>
   <div id="update-indicator" class="update-indicator">
     <span class="update-inner"></span>
   </div>
@@ -53,12 +63,20 @@ export default {
       // loading
       // initiated
       // initial-error
+      // appending
+      // no-more
+      // appended
+      // append-error
       status: 'created',
+
+      page: 0,
 
       newsList: [
       ],
 
-      updateTouchStartPosition: -100
+      updateTouchStartPosition: -100,
+
+      appendingTimer: null
     }
   },
 
@@ -76,12 +94,39 @@ export default {
         console.log(res.data)
         that.newsList = res.data.newsList
         that.status = 'initiated'
+        that.page = res.data.page
       })
       promise.catch(function(err) {
         console.log('Error:', err)
         that.status = 'initial-error'
       })
       return promise
+    },
+
+    append: async function(idx=0) {
+      var that = this
+      var promise = null
+      if (this.typeName == 1) {
+        promise = newsApi.newsList(this.partName, this.subName, 20, that.page + 1)
+      }
+      else if (this.typeName == 2) {
+        promise = newsApi.houseNews(this.partName, this.subName, 20, that.page + 1)
+      }
+      that.status = 'appending'
+      promise.then(function(res) {
+        console.log(res.data)
+        var appendNewsList = res.data.newsList
+        if (appendNewsList == 0) {
+          that.status = 'no-more'
+        }
+        else {
+          for (var i = 0; i < appendNewsList.length; i += 1) {
+            that.newsList.push(appendNewsList[i])
+          }
+          that.status = 'appended'
+          that.page = res.data.page
+        }
+      })
     },
 
     is3PicCard: function(piclist) {
@@ -177,6 +222,25 @@ export default {
         updateIndicator.style.top = '0px'
       }
       this.updateTouchStartPosition = -100
+    },
+
+    isNearBottom: function(scrollElement, bottom) {
+      if (scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight <= bottom) {
+        return true
+      }
+      else {
+        return false
+      }
+    },
+
+    appendingTimerHandle: function() {
+      var contents = document.getElementById('contents')
+      if (this.isNearBottom(contents, 30)) {
+        console.log('Near Bottom.')
+        if (this.status == 'initiated' || this.status == 'appended') {
+          this.append()
+        }
+      }
     }
   },
 
@@ -190,6 +254,7 @@ export default {
     contents.addEventListener('touchstart', this.touchstartHandle)
     contents.addEventListener('touchmove', this.touchmoveHandle)
     contents.addEventListener('touchend', this.touchendHandle)
+    this.appendingTimer = setInterval(this.appendingTimerHandle, 500)
   },
 
   deactivated: function() {
@@ -197,6 +262,7 @@ export default {
     contents.removeEventListener('touchstart', this.touchstartHandle)
     contents.removeEventListener('touchmove', this.touchmoveHandle)
     contents.removeEventListener('touchend', this.touchendHandle)
+    clearInterval(this.appendingTimer)
   }
 }
 </script>
@@ -262,5 +328,44 @@ export default {
   border-left-color: #42b983;
   border-bottom-color: #42b983;
   border-radius: 50%
+}
+
+/* Append */
+.appending-indicator {
+  height: 50px;
+}
+
+.appending-indicator-appending {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.appending-indicator-appending-inner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+.appending-indicator-appending-inner span {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border: 3px solid transparent;
+  border-top-color: #42b983;
+  border-left-color: #42b983;
+  border-bottom-color: #42b983;
+  animation: circle 1s infinite linear;
+  border-radius: 50%
+}
+
+.appending-indicator-no-more {
+  padding: 12px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #999999;
 }
 </style>
