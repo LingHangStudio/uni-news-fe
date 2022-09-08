@@ -64,12 +64,16 @@ export default {
 
     fixAHref: function(contentElement) {
       var aTags = contentElement.getElementsByTagName('a')
-      var baseUrl = this.articleObj.href.match(/http[a-zA-Z.:\/]+/)[0]
+      var baseUrl = this.articleObj.href.match(/[https:]+[\/]+[a-zA-Z.:]+/)[0]
       console.log(baseUrl)
       for (var idx = 0; idx < aTags.length; idx += 1) {
+        console.log(aTags)
+        if (aTags[idx].attributes['href'] == undefined) {
+          continue
+        }
         console.log(aTags[idx].attributes['href'].value)
         if (aTags[idx].attributes['href'].value.startsWith('/')) {  // Absolute path.
-          aTags[idx].hrefBackup = baseUrl.concat(aTags[idx].attributes['href'].value.slice(1))
+          aTags[idx].hrefBackup = baseUrl.concat(aTags[idx].attributes['href'].value)
           aTags[idx].href = 'javascript: void(0)'
           var that = this
           aTags[idx].onclick = function() {
