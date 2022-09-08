@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardGallery part-name="jiaowu" v-bind:sub-name="subName()"></CardGallery>
+    <CardGallery type-name="1" part-name="jiaowu" v-bind:sub-name="subName()"></CardGallery>
   </div>
 </template>
 

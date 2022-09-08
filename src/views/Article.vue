@@ -13,22 +13,43 @@
         <div class="article-title">
           <h1>{{articleObj.title}}</h1>
         </div>
-        <div class="article-time">{{articleObj.time}}</div>
-        <div id="content" class="article-content content" v-html="articleObj.text"></div>
+        <div class="article-time">发布时间：{{articleObj.dateStr}}</div>
+        <div id="content" class="article-content content" v-html="articleObj.content"></div>
+        <div class="article-link-container">
+          <div class="article-link-bar">
+            <div class="article-link-bar-title">原文</div>
+            <div class="article-link-bar-text">
+              <span>{{articleObj.href}}</span>
+            </div>
+            <div class="article-link-bar-widgets">
+              <div class="article-link-bar-widget-copy-text" v-on:click="copyHrefToClipboard()">
+                <img v-bind:src="require('@/assets/icon/icon-copy-efefef.svg')">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div id="message-box" class="message-box close">
+      <div class="message-box-text">链接已复制到剪切板</div>
     </div>
   </div>
 </template>
 
 <script>
 import ArticleStore from '@/store/ArticleStore'
+import newsApi from '@/api/newsApi'
 
 export default {
   name: 'Article',
 
   data: function() {
     return {
-      articleObj: {}
+      id: '0-0-0-0',
+
+      articleObj: {},
+
+      messageColdDown: false
     }
   },
 
@@ -38,6 +59,37 @@ export default {
       var len = imgs.length < piclist.length ? imgs.length : piclist.length
       for (var idx = 0; idx < len; idx += 1) {
         imgs[idx]['src'] = piclist[idx]
+      }
+    },
+
+    fixAHref: function(contentElement) {
+      var aTags = contentElement.getElementsByTagName('a')
+      var baseUrl = this.articleObj.href.match(/[https:]+[\/]+[a-zA-Z.:]+/)[0]
+      console.log(baseUrl)
+      for (var idx = 0; idx < aTags.length; idx += 1) {
+        console.log(aTags)
+        if (aTags[idx].attributes['href'] == undefined) {
+          continue
+        }
+        console.log(aTags[idx].attributes['href'].value)
+        if (aTags[idx].attributes['href'].value.startsWith('/')) {  // Absolute path.
+          aTags[idx].hrefBackup = baseUrl.concat(aTags[idx].attributes['href'].value)
+          aTags[idx].href = 'javascript: void(0)'
+          var that = this
+          aTags[idx].onclick = function() {
+            that.copyToClipboard(this.hrefBackup)
+            that.showMessageBox()
+          }
+        }
+        else {
+          aTags[idx].hrefBackup = aTags[idx].attributes['href'].value
+          aTags[idx].href = 'javascript: void(0)'
+          var that = this
+          aTags[idx].onclick = function() {
+            that.copyToClipboard(this.hrefBackup)
+            that.showMessageBox()
+          }
+        }
       }
     },
 
@@ -69,7 +121,13 @@ export default {
             removeBlankLineCore(children[idx])
             if (children[idx].tagName != 'IMG' && children[idx].tagName != 'DIV') {  // Exclude.
               // Also remove <style> tag.
-              if (children[idx].tagName == 'STYLE' || children[idx].innerHTML == '' || children[idx].innerHTML == '&nbsp;' || children[idx].innerHTML == '&nbsp;&nbsp;' || children[idx].innerHTML == '<br>') {
+              if (children[idx].tagName == 'STYLE'
+              || children[idx].innerHTML == ''
+              || children[idx].innerHTML == '&nbsp;'
+              || children[idx].innerHTML == '&nbsp;&nbsp;'
+              || children[idx].innerHTML == '　&nbsp;'
+              || children[idx].innerHTML == '&nbsp; &nbsp;&nbsp;'
+              || children[idx].innerHTML == '<br>') {
                 deleteNodes.push(children[idx])
               }
             }
@@ -84,27 +142,73 @@ export default {
       }
       removeBlankLineCore(contentElement)
     },
+
+    copyToClipboard: function(text) {
+      var tmp = document.createElement('input')
+      tmp.style = 'position: fixed; z-index: -100;'
+      document.body.appendChild(tmp)
+      tmp.value = text
+      tmp.select()
+      document.execCommand('copy')
+      document.body.removeChild(tmp)
+    },
+
+    copyHrefToClipboard: function() {
+      this.copyToClipboard(document.querySelector('.article-link-bar-text span').innerHTML)
+      this.showMessageBox()
+    },
+
+    strDate: function(year, month, day) {
+      return `${year}-${month}-${day}`
+    },
+
+    showMessageBox: function() {
+      var messageBox = document.getElementById('message-box')
+      if (!this.messageColdDown) {
+        this.messageColdDown = true
+        messageBox.classList.add('open')
+        messageBox.classList.remove('close')
+        var that = this
+        setTimeout(function() {
+          messageBox.classList.add('close')
+          messageBox.classList.remove('open')
+          setTimeout(function() {
+            that.messageColdDown = false
+          }, 500)
+        }, 3000)
+      }
+    }
   },
 
-  mounted: function() {
-    console.log(this.$route.params.id)
-    console.log(ArticleStore[this.$route.params.id])
-    this.articleObj = ArticleStore[this.$route.params.id]
-    var originPiclist = this.articleObj.piclist
+  mounted: async function() {
+    this.id = this.$route.params.id
+    console.log(this.id)
     var that = this
-    this.$nextTick(function () {
-      // Code that will run only after the
-      // entire view has been rendered
-      var piclist = []
-      for (var idx = 0; idx < originPiclist.length; idx += 1) {
-        piclist.push(originPiclist[idx].pic)
-      }
-      // console.log(piclist)
-      var contentElement = document.getElementById('content')
-      console.log(contentElement)
-      that.ficImgSrc(contentElement, piclist)
-      that.clearInlineStyle(contentElement)
-      that.removeBlankLine(contentElement)
+    await newsApi.newsContent(this.id)
+    .then(function(res) {
+      that.articleObj = res.data
+      that.articleObj.dateStr = that.strDate(
+        that.articleObj.date['year'],
+        that.articleObj.date['month'],
+        that.articleObj.date['day']
+      )
+      console.log(that.articleObj)
+      var originPiclist = that.articleObj.picList
+      that.$nextTick(function () {
+        // Code that will run only after the
+        // entire view has been rendered
+        var piclist = []
+        for (var idx = 0; idx < originPiclist.length; idx += 1) {
+          piclist.push(originPiclist[idx])
+        }
+        console.log(piclist)
+        var contentElement = document.getElementById('content')
+        console.log(contentElement)
+        that.ficImgSrc(contentElement, piclist)
+        that.clearInlineStyle(contentElement)
+        that.removeBlankLine(contentElement)
+        this.fixAHref(contentElement)
+      })
     })
   }
 }
@@ -183,5 +287,106 @@ export default {
   font-size: 13px;
   color: #999999;
   margin-bottom: 24px;
+}
+
+/* Extend Card */
+:root {
+  --x-bar-line-height: 30px;
+}
+
+.article-link-container {
+  margin-top: 32px;
+  background: linear-gradient(to right, rgb(0, 50, 255), rgb(185, 199, 255));
+  padding: 4px 0;
+  border-radius: 8px;
+}
+
+.article-link-bar {
+  display: flex;
+  padding: 0 10px;
+  height: var(--x-bar-line-height);
+  line-height: var(--x-bar-line-height);
+  font-size: 14px;
+}
+
+.article-link-bar-title {
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-left: 2px;
+  padding-right: 10px;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.article-link-bar-text {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+}
+
+.article-link-bar-text span {
+  display: inline-block;
+  padding: 0 8px;
+  width: max-content;
+}
+
+.article-link-bar-widgets {
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.article-link-bar-widget-copy-text {
+  width: calc(var(--x-bar-line-height) - 2px);
+  height: calc(var(--x-bar-line-height) - 2px);
+  border-radius: 50%;
+  background-color: rgb(0, 50, 255);
+  display: flex;
+  box-sizing: border-box;
+  padding: 7px;
+}
+
+.article-link-bar-widget-copy-text img {
+  width: 100%;
+  height: 100%;
+}
+
+.message-box {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 200;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  width: fit-content;
+  padding: 12px 16px;
+  border-radius: 1000px;
+  box-shadow: 0 0px 24px 0px rgba(40, 10, 10, 0.25);
+  transition: top 0.5s, opacity 0.5s;
+}
+
+.message-box.open {
+  top: 80px;
+  opacity: 1;
+}
+
+.message-box.close {
+  top: -60px;
+  opacity: 0;
+}
+
+.message-box-text {
+  max-width: 160px;
+  font-size: 14px;
+  line-height: 24px;
+  vertical-align: middle;
+  color: #333333;
 }
 </style>

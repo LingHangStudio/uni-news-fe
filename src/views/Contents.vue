@@ -40,6 +40,18 @@ export default {
     var thisWindow = document.getElementsByClassName('contents')[0]
     this.scrollTopMemery = thisWindow.scrollTop
     console.log(thisWindow.scrollTop)
+  },
+
+  watch: {
+    $route(to, from) {
+      console.log('From:', from.name)
+      console.log('To:', to.name)
+      var thisWindow = document.getElementsByClassName('contents')[0]
+      var partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
+      if (partNames.indexOf(to.name) != -1 && partNames.indexOf(from.name) != -1 && to.name != from.name) {
+        thisWindow.scrollTop = 0
+      }
+    }
   }
 }
 </script>
@@ -75,11 +87,14 @@ export default {
 
 .router-link-set {
   display: flex;
-  width: max-content;
+  /* width: max-content; */
+  width: 100%;
 }
 
 .router-link-set a {
   display: block;
+  flex-grow: 1;
+  flex-shrink: 1;
   width: 90px;
   height: var(--horizon-menu-height);
   line-height: var(--horizon-menu-height);
@@ -94,37 +109,46 @@ export default {
   color: #42b983;
 }
 
-/* Loading Animation */
-.load-container {
-  display: block;
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  left: 50%;
-  top: 40vh;
-  transform: translate(-50%, -50%);
-}
-
-.load {
+.horizon-menu-2 {
   box-sizing: border-box;
-  display: inline-block;
-  height: 100%;
   width: 100%;
-  border: 4px solid transparent;
-  border-top-color: #42b983;
-  border-left-color: #42b983;
-  border-bottom-color: #42b983;
-  animation: circle 1s infinite linear;
-  -webkit-animation: circle 1s infinite linear; /* Safari 和 Chrome */
-  border-radius: 50%
+  background-color: #f6f6f6;
 }
 
-@keyframes circle {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-360deg)
-  }
+.horizon-menu-inner-2 {
+  display: block;
+  overflow-x: auto;
+  scrollbar-width: none;  /* Firefox */
+  padding: 10px 0;
+}
+
+.horizon-menu-inner-2::-webkit-scrollbar {
+  display: none;  /* Chrome Safari */
+}
+
+.router-link-set-2 {
+  padding: 0 12px;
+  display: flex;
+  width: max-content;
+}
+
+.router-link-set-2 a {
+  display: block;
+  height: var(--horizon-menu-height);
+  line-height: var(--horizon-menu-height);
+  color: #6e6e6e;
+  text-decoration: none;
+  font-size: 13px;
+  background: white;
+  border-radius: 5px;
+  padding: 4px 10px;
+  margin: 0 4px;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.router-link-set-2 a.router-link-active {
+  font-weight: bold;
+  background: linear-gradient(45deg, #42b983, #86e6e8);
+  color: #ffffff;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CardGallery part-name="xueyuan" v-bind:sub-name="subName()"></CardGallery>
+    <CardGallery type-name="2" v-bind:part-name="partName()" v-bind:sub-name="subName()"></CardGallery>
   </div>
 </template>
 
@@ -15,7 +15,13 @@ export default {
   },
 
   methods: {
+    partName: function() {
+      console.log(this.$route.params.part)
+      return this.$route.params.part
+    },
+
     subName: function() {
+      console.log(this.$route.params.sub)
       return this.$route.params.sub
     }
   }
