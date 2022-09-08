@@ -250,6 +250,8 @@ export default {
       this.status = 'loading'
       this.init()
     }
+    var updateIndicator = document.getElementById('update-indicator')
+    updateIndicator.style.top = '0px'
     var contents = document.getElementById('contents')
     contents.addEventListener('touchstart', this.touchstartHandle)
     contents.addEventListener('touchmove', this.touchmoveHandle)

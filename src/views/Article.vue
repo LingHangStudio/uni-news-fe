@@ -30,6 +30,9 @@
         </div>
       </div>
     </div>
+    <div id="message-box" class="message-box close">
+      <div class="message-box-text">链接已复制到剪切板</div>
+    </div>
   </div>
 </template>
 
@@ -44,7 +47,9 @@ export default {
     return {
       id: '0-0-0-0',
 
-      articleObj: {}
+      articleObj: {},
+
+      messageColdDown: false
     }
   },
 
@@ -54,6 +59,25 @@ export default {
       var len = imgs.length < piclist.length ? imgs.length : piclist.length
       for (var idx = 0; idx < len; idx += 1) {
         imgs[idx]['src'] = piclist[idx]
+      }
+    },
+
+    fixAHref: function(contentElement) {
+      var aTags = contentElement.getElementsByTagName('a')
+      var baseUrl = this.articleObj.href.match(/http[a-zA-Z.:\/]+/)[0]
+      console.log(baseUrl)
+      for (var idx = 0; idx < aTags.length; idx += 1) {
+        console.log(aTags[idx].attributes['href'].value)
+        if (aTags[idx].attributes['href'].value.startsWith('/')) {  // Absolute path.
+          console.log('ABC')
+          aTags[idx].hrefBackup = baseUrl.concat(aTags[idx].attributes['href'].value.slice(1))
+          aTags[idx].href = 'javascript: void(0)'
+          var that = this
+          aTags[idx].onclick = function() {
+            that.copyToClipboard(this.hrefBackup)
+            that.showMessageBox()
+          }
+        }
       }
     },
 
@@ -119,10 +143,28 @@ export default {
 
     copyHrefToClipboard: function() {
       this.copyToClipboard(document.querySelector('.article-link-bar-text span').innerHTML)
+      this.showMessageBox()
     },
 
     strDate: function(year, month, day) {
       return `${year}-${month}-${day}`
+    },
+
+    showMessageBox: function() {
+      var messageBox = document.getElementById('message-box')
+      if (!this.messageColdDown) {
+        this.messageColdDown = true
+        messageBox.classList.add('open')
+        messageBox.classList.remove('close')
+        var that = this
+        setTimeout(function() {
+          messageBox.classList.add('close')
+          messageBox.classList.remove('open')
+          setTimeout(function() {
+            that.messageColdDown = false
+          }, 500)
+        }, 3000)
+      }
     }
   },
 
@@ -153,6 +195,7 @@ export default {
         that.ficImgSrc(contentElement, piclist)
         that.clearInlineStyle(contentElement)
         that.removeBlankLine(contentElement)
+        this.fixAHref(contentElement)
       })
     })
   }
@@ -234,8 +277,9 @@ export default {
   margin-bottom: 24px;
 }
 
+/* Extend Card */
 :root {
-  --x-bar-line-height: 26px;
+  --x-bar-line-height: 30px;
 }
 
 .article-link-container {
@@ -292,11 +336,45 @@ export default {
   background-color: rgb(0, 50, 255);
   display: flex;
   box-sizing: border-box;
-  padding: 6px;
+  padding: 7px;
 }
 
 .article-link-bar-widget-copy-text img {
   width: 100%;
   height: 100%;
+}
+
+.message-box {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 200;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  width: fit-content;
+  padding: 12px 16px;
+  border-radius: 1000px;
+  box-shadow: 0 0px 24px 0px rgba(40, 10, 10, 0.25);
+  transition: top 0.5s, opacity 0.5s;
+}
+
+.message-box.open {
+  top: 80px;
+  opacity: 1;
+}
+
+.message-box.close {
+  top: -60px;
+  opacity: 0;
+}
+
+.message-box-text {
+  max-width: 160px;
+  font-size: 14px;
+  line-height: 24px;
+  vertical-align: middle;
+  color: #333333;
 }
 </style>
