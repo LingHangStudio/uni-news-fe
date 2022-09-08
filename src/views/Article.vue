@@ -69,8 +69,16 @@ export default {
       for (var idx = 0; idx < aTags.length; idx += 1) {
         console.log(aTags[idx].attributes['href'].value)
         if (aTags[idx].attributes['href'].value.startsWith('/')) {  // Absolute path.
-          console.log('ABC')
           aTags[idx].hrefBackup = baseUrl.concat(aTags[idx].attributes['href'].value.slice(1))
+          aTags[idx].href = 'javascript: void(0)'
+          var that = this
+          aTags[idx].onclick = function() {
+            that.copyToClipboard(this.hrefBackup)
+            that.showMessageBox()
+          }
+        }
+        else {
+          aTags[idx].hrefBackup = aTags[idx].attributes['href'].value
           aTags[idx].href = 'javascript: void(0)'
           var that = this
           aTags[idx].onclick = function() {
