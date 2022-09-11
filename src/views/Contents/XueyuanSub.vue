@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CardGallery type-name="2" v-bind:part-name="partName()" v-bind:sub-name="subName()"></CardGallery>
+    <keep-alive>
+      <CardGallery type-name="2" v-bind:part-name="partName()" v-bind:sub-name="subName()"></CardGallery>
+    </keep-alive>
   </div>
 </template>
 

@@ -12,7 +12,7 @@
     </div>
     <router-view v-slot="{ Component }">
       <transition>
-        <keep-alive>
+        <keep-alive exclude="Xueyuan,XueyuanSub">
           <component :is="Component"></component>
         </keep-alive>
       </transition>

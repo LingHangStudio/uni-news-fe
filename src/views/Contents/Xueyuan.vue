@@ -3,7 +3,7 @@
     <div class="xueyuan-menu-bar">
       <div class="xueyuan-menu-bar-inner">
         <div class="xueyuan-selector-container">
-          <div class="xueyuan-selector open"
+          <div class="xueyuan-selector close"
             @click="toggleXueyuanSelector">
             <div class="xueyuan-name">{{houseName()}}</div>
             <div class="xueyuan-list">
@@ -49,11 +49,11 @@
     </div>
     <div id="expand-target" style="position: relative;">
       <router-view v-slot="{ Component }">
-        <transition>
-          <keep-alive>
+        <!-- <transition>
+          <keep-alive> -->
             <component class="slide-target" v-if="$route.name=='xueyuan-sub'" :is="Component" :key="$route.fullPath"></component>
-          </keep-alive>
-        </transition>
+          <!-- </keep-alive>
+        </transition> -->
       </router-view>
     </div>
   </div>
@@ -135,7 +135,7 @@ export default {
     },
 
     houseName: function() {
-      return this.houseDict[this.$route.params.part]
+      return this.houseDict[this.$route.params.part] || '请选择学院'
     },
 
     subName: function() {
@@ -149,6 +149,11 @@ export default {
 
   mounted: function() {
     this.updateHouseSub()
+    var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+    if (xueyuanSelector.classList.contains('close')) {
+      xueyuanSelector.classList.add('open')
+      xueyuanSelector.classList.remove('close')
+    }
   },
 
   watch: {
