@@ -49,11 +49,11 @@
     </div>
     <div id="expand-target" style="position: relative;">
       <router-view v-slot="{ Component }">
-        <!-- <transition>
-          <keep-alive> -->
+        <transition>
+          <keep-alive>
             <component class="slide-target" v-if="$route.name=='xueyuan-sub'" :is="Component" :key="$route.fullPath"></component>
-          <!-- </keep-alive>
-        </transition> -->
+          </keep-alive>
+        </transition>
       </router-view>
     </div>
   </div>
@@ -162,6 +162,20 @@ export default {
         if (to.params.part != from.params.part) {
           this.updateHouseSub()
         }
+      }
+      if (from.name == 'xuexiao'
+      || from.name == 'xuexiao-sub'
+      || from.name == 'jiaowu'
+      || from.name == 'jiaowu-sub'
+      || from.name == 'tuanwei'
+      || from.name == 'tuanwei-sub') {
+        this.$nextTick(function() {
+          var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+          if (xueyuanSelector.classList.contains('close')) {
+            xueyuanSelector.classList.add('open')
+            xueyuanSelector.classList.remove('close')
+          }
+        })
       }
     }
   }
