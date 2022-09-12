@@ -8,7 +8,7 @@
       </div>
       <div class="article-head-bar-text">正文</div>
     </div>
-    <div class="article-wrapper">
+    <div class="article-wrapper" v-if="status == 'loaded'">
       <div class="article">
         <div class="article-title">
           <h1>{{articleObj.title}}</h1>
@@ -48,6 +48,11 @@ export default {
       id: '0-0-0-0',
 
       articleObj: {},
+
+      // created
+      // loading
+      // loaded
+      status: 'created',
 
       messageColdDown: false
     }
@@ -186,6 +191,7 @@ export default {
     var that = this
     await newsApi.newsContent(this.id)
     .then(function(res) {
+      that.status = 'loaded'
       that.articleObj = res.data
       that.articleObj.dateStr = that.strDate(
         that.articleObj.date['year'],
