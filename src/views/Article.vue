@@ -31,7 +31,7 @@
       </div>
     </div>
     <div id="message-box" class="message-box close">
-      <div class="message-box-text">链接已复制到剪切板</div>
+      <div class="message-box-text">复制成功，请在浏览器中打开</div>
     </div>
   </div>
 </template>
@@ -366,9 +366,9 @@ export default {
   backdrop-filter: blur(5px);
   display: flex;
   width: fit-content;
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 1000px;
-  box-shadow: 0 0px 24px 0px rgba(40, 10, 10, 0.25);
+  box-shadow: 0 0px 24px 0px rgba(10, 10, 10, 0.25);
   transition: top 0.5s, opacity 0.5s;
 }
 
@@ -383,8 +383,8 @@ export default {
 }
 
 .message-box-text {
-  max-width: 160px;
-  font-size: 14px;
+  max-width: 200px;
+  font-size: 13px;
   line-height: 24px;
   vertical-align: middle;
   color: #333333;
