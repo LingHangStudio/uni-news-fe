@@ -7,7 +7,7 @@
           <div class="news-card-1-pic-time">{{time}}</div>
         </div>
         <div class="news-card-1-pic-right">
-          <img v-bind:src="picSrc" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+          <img v-bind:src="picSrc" v-bind:onerror="brokenImg">
         </div>
       </div>
     </div>
@@ -18,7 +18,13 @@
 export default {
   name: 'NewsCard1Pic',
 
-  props: ['title', 'time', 'picSrc']
+  props: ['title', 'time', 'picSrc'],
+
+  data: function() {
+    return {
+      brokenImg: `this.src="${require('@/assets/img/img-broken.png')}"`
+    }
+  }
 }
 </script>
 
