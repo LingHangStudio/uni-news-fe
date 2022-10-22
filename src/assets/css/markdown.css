@@ -53,6 +53,7 @@
     padding: 0;
 }
 
+.content div,
 .content h3,
 .content h4,
 .content h5,
@@ -63,6 +64,7 @@
     padding: 0;
 }
 
+.content div,
 .content p,
 .content dl {
     margin-top: 14px;
@@ -123,6 +125,7 @@ h6 * {
     line-height: 26px;
 }
 
+.content div,
 .content p,
 .content ul,
 .content ol {
