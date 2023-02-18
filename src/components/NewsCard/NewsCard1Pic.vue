@@ -29,20 +29,14 @@ export default {
 </script>
 
 <style>
-.news-card-1-pic-wrapper {
-  background-color: white;
-}
-
 .news-card-1-pic {
-  border-radius: 5px;
-  padding: 0 16px;
+  padding: 0 12px;
 }
 
 .news-card-1-pic-inner {
   display: flex;
   box-sizing: border-box;
-  padding: 12px 0;
-  border-bottom: 0.6px solid #e8e8e8;
+  padding: 8px 0;
 }
 
 .news-card-1-pic-left {

@@ -148,7 +148,7 @@ export default {
 
 .router-link-set-2 a.router-link-active {
   font-weight: bold;
-  background: linear-gradient(45deg, #42b983, #86e6e8);
+  background: #42b983;
   color: #ffffff;
 }
 </style>
