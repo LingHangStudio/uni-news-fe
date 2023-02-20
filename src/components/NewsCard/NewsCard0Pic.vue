@@ -18,18 +18,12 @@ export default {
 </script>
 
 <style>
-.news-card-0-pic-wrapper {
-  background-color: white;
-}
-
 .news-card-0-pic {
-  border-radius: 5px;
-  padding: 0 16px;
+  padding: 0 12px;
 }
 
 .news-card-0-pic-inner {
-  padding: 12px 0;
-  border-bottom: 0.6px solid #e8e8e8;
+  padding: 8px 0;
 }
 
 .news-card-0-pic-title {
@@ -38,6 +32,7 @@ export default {
   font-weight: 800;
   margin-bottom: 16px;
   color: #333333;
+  word-break: break-all;
 }
 
 .news-card-0-pic-time {

@@ -3,7 +3,7 @@
     <div class="xueyuan-menu-bar">
       <div class="xueyuan-menu-bar-inner">
         <div class="xueyuan-selector-container">
-          <div class="xueyuan-selector open"
+          <div class="xueyuan-selector close"
             @click="toggleXueyuanSelector">
             <div class="xueyuan-name">{{houseName()}}</div>
             <div class="xueyuan-list">
@@ -135,7 +135,7 @@ export default {
     },
 
     houseName: function() {
-      return this.houseDict[this.$route.params.part]
+      return this.houseDict[this.$route.params.part] || '请选择学院'
     },
 
     subName: function() {
@@ -149,6 +149,11 @@ export default {
 
   mounted: function() {
     this.updateHouseSub()
+    var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+    if (xueyuanSelector.classList.contains('close')) {
+      xueyuanSelector.classList.add('open')
+      xueyuanSelector.classList.remove('close')
+    }
   },
 
   watch: {
@@ -157,6 +162,20 @@ export default {
         if (to.params.part != from.params.part) {
           this.updateHouseSub()
         }
+      }
+      if (from.name == 'xuexiao'
+      || from.name == 'xuexiao-sub'
+      || from.name == 'jiaowu'
+      || from.name == 'jiaowu-sub'
+      || from.name == 'tuanwei'
+      || from.name == 'tuanwei-sub') {
+        this.$nextTick(function() {
+          var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+          if (xueyuanSelector.classList.contains('close')) {
+            xueyuanSelector.classList.add('open')
+            xueyuanSelector.classList.remove('close')
+          }
+        })
       }
     }
   }

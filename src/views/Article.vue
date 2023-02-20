@@ -8,46 +8,47 @@
       </div>
       <div class="article-head-bar-text">正文</div>
     </div>
-    <div class="article-wrapper">
+    <div class="article-wrapper" v-if="status == 'loaded'">
       <div class="article">
         <div class="article-title">
           <h1>{{articleObj.title}}</h1>
         </div>
         <div class="article-time">发布时间：{{articleObj.dateStr}}</div>
         <div id="content" class="article-content content" v-html="articleObj.content"></div>
-        <div class="article-link-container">
-          <div class="article-link-bar">
-            <div class="article-link-bar-title">原文</div>
-            <div class="article-link-bar-text">
-              <span>{{articleObj.href}}</span>
-            </div>
-            <div class="article-link-bar-widgets">
-              <div class="article-link-bar-widget-copy-text" v-on:click="copyHrefToClipboard()">
-                <img v-bind:src="require('@/assets/icon/icon-copy-efefef.svg')">
-              </div>
-            </div>
-          </div>
-        </div>
+        <OriginArticleX class="origin-article-x"
+          v-bind:origin-href="articleObj.href"
+          v-on:show-message-box="showMessageBox">
+        </OriginArticleX>
       </div>
     </div>
     <div id="message-box" class="message-box close">
-      <div class="message-box-text">链接已复制到剪切板</div>
+      <div class="message-box-text">复制成功，请在浏览器中打开</div>
     </div>
   </div>
 </template>
 
 <script>
+import OriginArticleX from '@/components/ArticleXCard/OriginArticleX.vue'
 import ArticleStore from '@/store/ArticleStore'
 import newsApi from '@/api/newsApi'
 
 export default {
   name: 'Article',
 
+  components: {
+    OriginArticleX: OriginArticleX
+  },
+
   data: function() {
     return {
       id: '0-0-0-0',
 
       articleObj: {},
+
+      // created
+      // loading
+      // loaded
+      status: 'created',
 
       messageColdDown: false
     }
@@ -186,6 +187,7 @@ export default {
     var that = this
     await newsApi.newsContent(this.id)
     .then(function(res) {
+      that.status = 'loaded'
       that.articleObj = res.data
       that.articleObj.dateStr = that.strDate(
         that.articleObj.date['year'],
@@ -294,66 +296,8 @@ export default {
   --x-bar-line-height: 30px;
 }
 
-.article-link-container {
+.origin-article-x {
   margin-top: 32px;
-  background: linear-gradient(to right, rgb(0, 50, 255), rgb(185, 199, 255));
-  padding: 4px 0;
-  border-radius: 8px;
-}
-
-.article-link-bar {
-  display: flex;
-  padding: 0 10px;
-  height: var(--x-bar-line-height);
-  line-height: var(--x-bar-line-height);
-  font-size: 14px;
-}
-
-.article-link-bar-title {
-  flex-grow: 0;
-  flex-shrink: 0;
-  padding-left: 2px;
-  padding-right: 10px;
-  color: #ffffff;
-  font-size: 13px;
-}
-
-.article-link-bar-text {
-  flex-grow: 1;
-  flex-shrink: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 4px;
-}
-
-.article-link-bar-text span {
-  display: inline-block;
-  padding: 0 8px;
-  width: max-content;
-}
-
-.article-link-bar-widgets {
-  flex-grow: 0;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-}
-
-.article-link-bar-widget-copy-text {
-  width: calc(var(--x-bar-line-height) - 2px);
-  height: calc(var(--x-bar-line-height) - 2px);
-  border-radius: 50%;
-  background-color: rgb(0, 50, 255);
-  display: flex;
-  box-sizing: border-box;
-  padding: 7px;
-}
-
-.article-link-bar-widget-copy-text img {
-  width: 100%;
-  height: 100%;
 }
 
 .message-box {
@@ -366,9 +310,9 @@ export default {
   backdrop-filter: blur(5px);
   display: flex;
   width: fit-content;
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 1000px;
-  box-shadow: 0 0px 24px 0px rgba(40, 10, 10, 0.25);
+  box-shadow: 0 0px 24px 0px rgba(10, 10, 10, 0.25);
   transition: top 0.5s, opacity 0.5s;
 }
 
@@ -383,8 +327,8 @@ export default {
 }
 
 .message-box-text {
-  max-width: 160px;
-  font-size: 14px;
+  max-width: 200px;
+  font-size: 13px;
   line-height: 24px;
   vertical-align: middle;
   color: #333333;

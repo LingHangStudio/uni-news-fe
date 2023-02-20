@@ -5,13 +5,13 @@
         <div class="news-card-3-pic-title">{{title}}</div>
         <div class="news-card-3-pic-pictures-bar">
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic1Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+            <img v-bind:src="pic1Src" v-bind:onerror="brokenImg">
           </div>
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic2Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+            <img v-bind:src="pic2Src" v-bind:onerror="brokenImg">
           </div>
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic3Src" onerror="this.src='https://one.oss.monkeyhbd.cn/monkeyhbd.jpg'">
+            <img v-bind:src="pic3Src" v-bind:onerror="brokenImg">
           </div>
         </div>
         <div class="news-card-3-pic-time">{{time}}</div>
@@ -24,23 +24,23 @@
 export default {
   name: 'NewsCard3Pic',
 
-  props: ['title', 'time', 'pic1Src', 'pic2Src', 'pic3Src']
+  props: ['title', 'time', 'pic1Src', 'pic2Src', 'pic3Src'],
+
+  data: function() {
+    return {
+      brokenImg: `this.src="${require('@/assets/img/img-broken.png')}"`
+    }
+  }
 }
 </script>
 
 <style>
-.news-card-3-pic-wrapper {
-  background-color: white;
-}
-
 .news-card-3-pic {
-  border-radius: 5px;
-  padding: 0 16px;
+  padding: 0 12px;
 }
 
 .news-card-3-pic-inner {
-  padding: 12px 0;
-  border-bottom: 0.6px solid #e8e8e8;
+  padding: 8px 0;
 }
 
 .news-card-3-pic-title {
@@ -49,6 +49,7 @@ export default {
   font-weight: 800;
   margin-bottom: 12px;
   color: #333333;
+  word-break: break-all;
 }
 
 .news-card-3-pic-pictures-bar {

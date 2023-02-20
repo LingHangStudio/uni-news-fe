@@ -5,22 +5,27 @@
     </div>
     <div v-if="status=='initial-error'">加载错误</div>
     <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)" v-bind:key="obj.id">
-      <NewsCard3Pic
-        v-if="is3PicCard(obj.picList)"
-        v-bind:title="obj.title"
-        v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
-        v-bind:pic-1-src="picUrl(obj.picList[0])"
-        v-bind:pic-2-src="picUrl(obj.picList[1])"
-        v-bind:pic-3-src="picUrl(obj.picList[2])"></NewsCard3Pic>
-      <NewsCard1Pic
-        v-else-if="is1PicCard(obj.picList)"
-        v-bind:title="obj.title"
-        v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
-        v-bind:pic-src="picUrl(obj.picList[0])"></NewsCard1Pic>
-      <NewsCard0Pic
-        v-else
-        v-bind:title="obj.title"
-        v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"></NewsCard0Pic>
+      <div class="news-card-selector-inner">
+        <NewsCard3Pic
+          v-if="is3PicCard(obj.picList)"
+          v-bind:title="obj.title"
+          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
+          v-bind:pic-1-src="picUrl(obj.picList[0])"
+          v-bind:pic-2-src="picUrl(obj.picList[1])"
+          v-bind:pic-3-src="picUrl(obj.picList[2])"></NewsCard3Pic>
+        <NewsCard1Pic
+          v-else-if="is1PicCard(obj.picList)"
+          v-bind:title="obj.title"
+          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
+          v-bind:pic-src="picUrl(obj.picList[0])"></NewsCard1Pic>
+        <NewsCard0Pic
+          v-else
+          v-bind:title="obj.title"
+          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"></NewsCard0Pic>
+      </div>
+      <div class="news-card-divider">
+        <div class="news-card-divider-inner"></div>
+      </div>
     </div>
   </div>
   <div id="appending-indicator" class="appending-indicator">
@@ -174,12 +179,26 @@ export default {
     },
 
     strDate: function(year, month, day) {
-      if (year == 2022) {
-        return `${month}月${day}日`
+      var today = new Date()
+      var publishDate = new Date(year, month-1, day)
+      var dateStr = ''
+      if (year == today.getFullYear()) {
+        dateStr = `${month}月${day}日`
       }
       else {
-        return `${year}年${month}月${day}日`
+        dateStr = `${year}年${month}月${day}日`
       }
+      var diffDay = (today - publishDate) / 1000 / 60 / 60 / 24
+      if (diffDay < 1) {
+        dateStr = '今天'
+      }
+      else if (diffDay < 2) {
+        dateStr = '昨天'
+      }
+      else if (diffDay < 3) {
+        dateStr = '前天'
+      }
+      return dateStr
     },
 
     touchstartHandle: function(e) {
@@ -369,5 +388,35 @@ export default {
   text-align: center;
   font-size: 14px;
   color: #999999;
+}
+
+.news-card-selector {
+  position: relative;
+  padding: 4px;
+  background-color: white;
+}
+
+.news-card-selector-inner {
+  border-radius: 8px;
+}
+
+.news-card-selector-inner:active {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.news-card-divider {
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  bottom: 0.6px;
+  width: 100%;
+  height: 0;
+  padding: 0 12px;
+}
+
+.news-card-divider-inner {
+  width: 100%;
+  height: 0;
+  border-top: 0.6px solid #e8e8e8;
 }
 </style>
