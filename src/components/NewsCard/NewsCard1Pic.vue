@@ -51,6 +51,7 @@ export default {
   font-weight: 800;
   margin-bottom: 16px;
   color: #333333;
+  word-break: break-all;
 }
 
 .news-card-1-pic-time {
