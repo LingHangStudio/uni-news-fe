@@ -3,7 +3,7 @@ import axios from "axios"
 
 
 var newsAxios = axios.create({
-  baseURL: 'https://api.424neko.top/api',
+  baseURL: 'https://wust-news.api.monkeyhbd.cn/v1/api/',
   timeout: 5000
 })
 
