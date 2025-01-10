@@ -24,3 +24,5 @@ pnpm-debug.log*
 
 # build
 news/
+
+package-lock.json

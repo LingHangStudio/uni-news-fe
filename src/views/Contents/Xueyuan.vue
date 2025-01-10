@@ -163,12 +163,12 @@ export default {
           this.updateHouseSub()
         }
       }
-      if (from.name == 'xuexiao'
+      if ((from.name == 'xuexiao'
       || from.name == 'xuexiao-sub'
       || from.name == 'jiaowu'
       || from.name == 'jiaowu-sub'
       || from.name == 'tuanwei'
-      || from.name == 'tuanwei-sub') {
+      || from.name == 'tuanwei-sub') && to.name == 'xueyuan') {
         this.$nextTick(function() {
           var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
           if (xueyuanSelector.classList.contains('close')) {
