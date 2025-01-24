@@ -1,34 +1,36 @@
+<script setup>
+import { defineProps } from 'vue'
+
+defineProps({
+  title: String,
+  time: String,
+  picSrc: String,
+});
+
+import brokenImg from '@/assets/img/img-broken.png'
+
+const handleError = (e) => {
+  e.target.src = brokenImg
+};
+</script>
+
 <template>
   <div class="news-card-1-pic-wrapper">
     <div class="news-card-1-pic">
       <div class="news-card-1-pic-inner">
         <div class="news-card-1-pic-left">
-          <div class="news-card-1-pic-title">{{title}}</div>
-          <div class="news-card-1-pic-time">{{time}}</div>
+          <div class="news-card-1-pic-title">{{ title }}</div>
+          <div class="news-card-1-pic-time">{{ time }}</div>
         </div>
         <div class="news-card-1-pic-right">
-          <img v-bind:src="picSrc" v-bind:onerror="brokenImg">
+          <img :src="picSrc" @error="handleError" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'NewsCard1Pic',
-
-  props: ['title', 'time', 'picSrc'],
-
-  data: function() {
-    return {
-      brokenImg: `this.src="${require('@/assets/img/img-broken.png')}"`
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 .news-card-1-pic {
   padding: 0 12px;
 }

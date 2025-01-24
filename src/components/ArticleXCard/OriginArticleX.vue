@@ -1,3 +1,33 @@
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+import iconSrc from '@/assets/icon/icon-copy-efefef.svg';
+
+defineProps({
+  originHref: String
+})
+
+const emit = defineEmits(['showMessageBox'])
+
+const emitMessage = () => {
+  emit('showMessageBox')
+}
+
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Copied to clipboard successfully!');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
+};
+
+const copyHrefToClipboard = () => {
+  const hrefText = document.querySelector('.article-link-bar-text span').innerText;
+  copyToClipboard(hrefText);
+  emitMessage();
+};
+</script>
+
 <template>
   <div class="article-link-container">
     <div class="article-link-bar">
@@ -6,41 +36,15 @@
         <span>{{ originHref }}</span>
       </div>
       <div class="article-link-bar-widgets">
-        <div class="article-link-bar-widget-copy-text" v-on:click="copyHrefToClipboard()">
-          <img v-bind:src="require('@/assets/icon/icon-copy-efefef.svg')">
+        <div class="article-link-bar-widget-copy-text" @click="copyHrefToClipboard()">
+          <img :src="iconSrc" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'OriginArticleX',
-
-  props: ['originHref'],
-
-  methods: {
-    copyToClipboard: function (text) {
-      var tmp = document.createElement('input')
-      tmp.style = 'position: fixed; z-index: -100;'
-      document.body.appendChild(tmp)
-      tmp.value = text
-      tmp.select()
-      document.execCommand('copy')
-      document.body.removeChild(tmp)
-    },
-
-    copyHrefToClipboard: function () {
-      this.copyToClipboard(document.querySelector('.article-link-bar-text span').innerHTML)
-      // this.showMessageBox()
-      this.$emit('showMessageBox')
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 .article-link-container {
   background: linear-gradient(to right, rgb(0, 50, 255), rgb(185, 199, 255));
   padding: 4px 0;

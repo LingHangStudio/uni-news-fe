@@ -1,28 +1,24 @@
+<script setup>
+import CardGallery from '@/components/NewsCard/CardGallery.vue'
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+
+const subName = () => {
+  return route.params.sub
+}
+
+</script>
+
 <template>
   <div>
-    <CardGallery type-name="1" part-name="jiaowu" v-bind:sub-name="subName()"></CardGallery>
+    <CardGallery type-name="1" part-name="jiaowu" :sub-name="subName()"></CardGallery>
   </div>
 </template>
 
-<script>
-import CardGallery from '@/components/NewsCard/CardGallery.vue'
 
-export default {
-  name: 'JiaowuSub',
-
-  components: {
-    CardGallery: CardGallery
-  },
-
-  methods: {
-    subName: function() {
-      return this.$route.params.sub
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
+/* css没有使用 */
 .news-card-wrapper {
   background-color: white;
 }

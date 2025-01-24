@@ -1,15 +1,15 @@
-var ApiList = {
-	xuexiao: {
+const ApiList = {
+  xuexiao: {
     yaowen: [1, 1],
     meiti: [1, 2],
     xueshu: [1, 3],
     zonghe: [1, 4],
-    yuanxi: [1, 5]
+    yuanxi: [1, 5],
   },
 
   jiaowu: {
     tongzhigonggao: [2, 1],
-    jiaoxuedongtai: [2, 2]
+    jiaoxuedongtai: [2, 2],
   },
 
   xueyuan: {
@@ -30,7 +30,7 @@ var ApiList = {
     xinxikexueyugongchengxueyuan: [3, 15],
     yixueyuan: [3, 16],
     yishuyushejixueyuan: [3, 17],
-    ziyuanyuhuanjinggongchengxueyuan: [3, 18]
+    ziyuanyuhuanjinggongchengxueyuan: [3, 18],
   },
 
   tuanwei: {
@@ -39,8 +39,8 @@ var ApiList = {
     wenjianziliao: [4, 3],
     xueshenghuodong: [4, 4],
     redianjujiao: [4, 5],
-    tashanzhishi: [4, 6]
-  }
+    tashanzhishi: [4, 6],
+  },
 }
 
 export default ApiList

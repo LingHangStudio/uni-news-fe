@@ -1,11 +1,114 @@
+<script setup>
+import newsApi from '@/api/newsApi'
+import { ref, onMounted, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+const house = ref(7)
+const houseSubList = ref([])
+const houseDict = ref({
+  1: '材料与冶金学院',
+  2: '城市建设学院',
+  3: '恒大管理学院',
+  4: '国际学院',
+  5: '化学与化工学院',
+  6: '机械自动化学院',
+  7: '计算机科学与技术学院',
+  8: '理学院',
+  9: '马克思主义学院',
+  10: '汽车与交通工程学院',
+  11: '生命科学与健康学院',
+  12: '体育学院',
+  13: '外国语学院',
+  14: '文法与经济学院',
+  15: '信息科学与工程学院',
+  16: '医学院',
+  17: '艺术与设计学院',
+  18: '资源与环境工程学院'
+})
+
+const toggleXueyuanSelector = () => {
+  const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+  if (xueyuanSelector.classList.contains('close')) {
+    xueyuanSelector.classList.add('open')
+    xueyuanSelector.classList.remove('close')
+  }
+  else {
+    xueyuanSelector.classList.add('close')
+    xueyuanSelector.classList.remove('open')
+  }
+}
+
+const toggleSubSelector = () => {
+  const subSelector = document.getElementsByClassName('sub-selector')[0]
+  if (subSelector.classList.contains('close')) {
+    subSelector.classList.add('open')
+    subSelector.classList.remove('close')
+  }
+  else {
+    subSelector.classList.add('close')
+    subSelector.classList.remove('open')
+  }
+}
+
+const updateHouseSub = async () => {
+  try {
+    const res = await newsApi.houseSub(route.params.part)
+    house.value = res.data.house
+    houseSubList.value = res.data.subList ? res.data.subList : []
+  }
+  catch (error) {
+    console.error(error)
+  }
+}
+
+const houseName = () => {
+  return houseDict.value[route.params.part] || '请选择学院'
+}
+
+const subName = () => {
+  const obj = houseSubList.value[route.params.sub - 1]
+  if (obj == null) {
+    return null
+  }
+  return obj.name
+}
+
+onMounted(async () => {
+  await updateHouseSub()
+  const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+  if (xueyuanSelector.classList.contains('close')) {
+    xueyuanSelector.classList.add('open')
+    xueyuanSelector.classList.remove('close')
+  }
+})
+
+watch(route, async (to, from) => {
+  if ((to.name == 'xueyuan-sub' || to.name == 'xueyuan') && (from.name == 'xueyuan-sub' || from.name == 'xueyuan')) {
+    if (to.params.part != from.params.part) {
+      await updateHouseSub()
+    }
+  }
+  const nameList = ['xuexiao', 'xuexiao-sub', 'jiaowu', 'jiaowu-sub', 'tuanwei', 'tuanwei-sub']
+
+  if (nameList.includes(from.name) && to.name == 'xueyuan') {
+    await nextTick()
+    const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+    if (xueyuanSelector.classList.contains('close')) {
+      xueyuanSelector.classList.add('open')
+      xueyuanSelector.classList.remove('close')
+    }
+  }
+})
+</script>
+
 <template>
   <div>
     <div class="xueyuan-menu-bar">
       <div class="xueyuan-menu-bar-inner">
         <div class="xueyuan-selector-container">
-          <div class="xueyuan-selector close"
-            @click="toggleXueyuanSelector">
-            <div class="xueyuan-name">{{houseName()}}</div>
+          <div class="xueyuan-selector close" @click="toggleXueyuanSelector">
+            <div class="xueyuan-name">{{ houseName() }}</div>
             <div class="xueyuan-list">
               <div class="xueyuan-list-column">
                 <router-link to="/contents/xueyuan/1/1">材料与冶金学院</router-link>
@@ -33,14 +136,11 @@
           </div>
         </div>
         <div class="sub-selector-container">
-          <div class="sub-selector close"
-            @click="toggleSubSelector">
-            <div class="sub-name">{{subName()}}</div>
+          <div class="sub-selector close" @click="toggleSubSelector">
+            <div class="sub-name">{{ subName() }}</div>
             <div class="sub-list">
-              <router-link v-for="obj in houseSubList"
-                v-bind:key="obj.sub"
-                v-bind:to="`/contents/xueyuan/${house}/${obj.sub}`">
-                {{obj.name}}
+              <router-link v-for="obj in houseSubList" :key="obj.sub" :to="`/contents/xueyuan/${house}/${obj.sub}`">
+                {{ obj.name }}
               </router-link>
             </div>
           </div>
@@ -51,7 +151,8 @@
       <router-view v-slot="{ Component }">
         <transition>
           <keep-alive>
-            <component class="slide-target" v-if="$route.name=='xueyuan-sub'" :is="Component" :key="$route.fullPath"></component>
+            <component class="slide-target" v-if="route.name == 'xueyuan-sub'" :is="Component" :key="route.fullPath">
+            </component>
           </keep-alive>
         </transition>
       </router-view>
@@ -59,130 +160,7 @@
   </div>
 </template>
 
-<script>
-import newsApi from '@/api/newsApi'
-
-export default {
-  name: 'Xueyuan',
-
-  data: function() {
-    return {
-      house: 7,
-
-      houseSubList: [],
-
-      houseDict: {
-        1: '材料与冶金学院',
-        2: '城市建设学院',
-        3: '恒大管理学院',
-        4: '国际学院',
-        5: '化学与化工学院',
-        6: '机械自动化学院',
-        7: '计算机科学与技术学院',
-        8: '理学院',
-        9: '马克思主义学院',
-        10: '汽车与交通工程学院',
-        11: '生命科学与健康学院',
-        12: '体育学院',
-        13: '外国语学院',
-        14: '文法与经济学院',
-        15: '信息科学与工程学院',
-        16: '医学院',
-        17: '艺术与设计学院',
-        18: '资源与环境工程学院'
-      }
-    }
-  },
-
-  methods: {
-    toggleXueyuanSelector: function() {
-      var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
-      if (xueyuanSelector.classList.contains('close')) {
-        xueyuanSelector.classList.add('open')
-        xueyuanSelector.classList.remove('close')
-      }
-      else {
-        xueyuanSelector.classList.add('close')
-        xueyuanSelector.classList.remove('open')
-      }
-    },
-
-    toggleSubSelector: function() {
-      var subSelector = document.getElementsByClassName('sub-selector')[0]
-      if (subSelector.classList.contains('close')) {
-        subSelector.classList.add('open')
-        subSelector.classList.remove('close')
-      }
-      else {
-        subSelector.classList.add('close')
-        subSelector.classList.remove('open')
-      }
-    },
-
-    updateHouseSub: function() {
-      var promise = newsApi.houseSub(this.$route.params.part)
-      var that = this
-      promise.then(function(res) {
-        console.log(res.data)
-        that.house = res.data.house
-        if (res.data.subList == undefined) {
-          that.houseSubList = []
-        }
-        else {
-          that.houseSubList = res.data.subList
-        }
-      })
-    },
-
-    houseName: function() {
-      return this.houseDict[this.$route.params.part] || '请选择学院'
-    },
-
-    subName: function() {
-      var obj = this.houseSubList[this.$route.params.sub-1]
-      if (obj == null) {
-        return null
-      }
-      return obj.name
-    }
-  },
-
-  mounted: function() {
-    this.updateHouseSub()
-    var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
-    if (xueyuanSelector.classList.contains('close')) {
-      xueyuanSelector.classList.add('open')
-      xueyuanSelector.classList.remove('close')
-    }
-  },
-
-  watch: {
-    $route: function(to, from) {
-      if ((to.name == 'xueyuan-sub' || to.name == 'xueyuan') && (from.name == 'xueyuan-sub' || from.name == 'xueyuan')) {
-        if (to.params.part != from.params.part) {
-          this.updateHouseSub()
-        }
-      }
-      if ((from.name == 'xuexiao'
-      || from.name == 'xuexiao-sub'
-      || from.name == 'jiaowu'
-      || from.name == 'jiaowu-sub'
-      || from.name == 'tuanwei'
-      || from.name == 'tuanwei-sub') && to.name == 'xueyuan') {
-        this.$nextTick(function() {
-          var xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
-          if (xueyuanSelector.classList.contains('close')) {
-            xueyuanSelector.classList.add('open')
-            xueyuanSelector.classList.remove('close')
-          }
-        })
-      }
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 .xueyuan-menu-bar {
   padding: 10px 0;
 }

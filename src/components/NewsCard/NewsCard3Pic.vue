@@ -1,40 +1,44 @@
+<script setup>
+import { defineProps } from 'vue'
+
+defineProps({
+  title: String,
+  time: String,
+  pic1Src: String,
+  pic2Src: String,
+  pic3Src: String
+})
+
+import brokenImg from '@/assets/img/img-broken.png';
+
+const handleError = (e) => {
+  e.target.src = brokenImg
+}
+</script>
+
 <template>
   <div class="news-card-3-pic-wrapper">
     <div class="news-card-3-pic">
       <div class="news-card-3-pic-inner">
-        <div class="news-card-3-pic-title">{{title}}</div>
+        <div class="news-card-3-pic-title">{{ title }}</div>
         <div class="news-card-3-pic-pictures-bar">
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic1Src" v-bind:onerror="brokenImg">
+            <img :src="pic1Src" @error="handleError">
           </div>
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic2Src" v-bind:onerror="brokenImg">
+            <img :src="pic2Src" @error="handleError">
           </div>
           <div class="news-card-3-pic-picture">
-            <img v-bind:src="pic3Src" v-bind:onerror="brokenImg">
+            <img :src="pic3Src" @error="handleError">
           </div>
         </div>
-        <div class="news-card-3-pic-time">{{time}}</div>
+        <div class="news-card-3-pic-time">{{ time }}</div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'NewsCard3Pic',
-
-  props: ['title', 'time', 'pic1Src', 'pic2Src', 'pic3Src'],
-
-  data: function() {
-    return {
-      brokenImg: `this.src="${require('@/assets/img/img-broken.png')}"`
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 .news-card-3-pic {
   padding: 0 12px;
 }

@@ -1,13 +1,12 @@
-import axios from "axios";
-import store from "@/store";
-import { Toast } from "vant";
+import axios from 'axios'
+import { Toast } from 'vant'
 
 // create an axios instance
 const service = axios.create({
   // 请求根路径
-  baseURL: "www.xxxx.com/api",
+  baseURL: 'www.xxxx.com/api',
   timeout: 5000,
-});
+})
 
 //  请求拦截
 service.interceptors.request.use(
@@ -29,52 +28,52 @@ service.interceptors.request.use(
     //   });
     // }
     // console.log(config);
-    return config;
+    return config
   },
   (error) => {
     // console.log(error);
-    return Promise.reject(error);
-  }
-);
+    return Promise.reject(error)
+  },
+)
 
 // respone 响应拦截
 service.interceptors.response.use(
   (response) => {
-    const res = response.data;
+    const res = response.data
     //请求失败的提示配置
     if (res.status && res.status !== 200) {
-      Toast(res.msg);
+      Toast(res.msg)
       switch (res.status) {
         case 11101:
           // ...
-          break;
+          break
         case 11102:
           // ...
-          break;
+          break
         case 11103:
           // ...
-          break;
+          break
         default:
-          return Promise.reject(res || "error");
+          return Promise.reject(res || 'error')
       }
     } else {
-      return Promise.resolve(res);
+      return Promise.resolve(res)
     }
   },
   //请求错误的配置
   (error) => {
-    console.log("err" + error); // for debug
+    console.log('err' + error) // for debug
     switch (error.response.status) {
       case 401:
         // ...
-        break;
+        break
       case 500:
         // ...
-        break;
+        break
       default:
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
-  }
-);
+  },
+)
 
-export default service;
+export default service

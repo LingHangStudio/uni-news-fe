@@ -1,7 +1,27 @@
+<script setup>
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
+
+const transitionName = ref('open-article')
+const route = useRoute()
+
+watch(route, (to, from) => {
+  if (to.name == 'article') {
+    transitionName.value = "open-article"
+  }
+  else if (from.name == 'article') {
+    transitionName.value = "close-article"
+  }
+  else {
+    transitionName.value = "none"
+  }
+})
+</script>
+
 <template>
   <main class="root-frame">
     <router-view v-slot="{ Component }">
-      <transition v-bind:name="transitionName">
+      <transition :name="transitionName">
         <keep-alive exclude="Article">
           <component class="root-transition-target" :is="Component"></component>
         </keep-alive>
@@ -10,76 +30,65 @@
   </main>
 </template>
 
-<script>
-export default {
-  name: 'App',
-
-  data: function() {
-    return {
-      transitionName: 'open-article'
-    }
-  },
-
-  watch: {
-    $route(to, from) {
-      if (to.name == 'article') {
-        this.transitionName = "open-article"
-      }
-      else if (from.name == 'article') {
-        this.transitionName = "close-article"
-      }
-      else {
-        this.transitionName = "none"
-      }
-    }
-  }
+<style lang="scss">
+.root-frame {
+  overflow: hidden;
 }
-</script>
 
-
-<style>
 .open-article-leave-active {
   transition-delay: 0.5s;
 }
+
 .open-article-leave-active * {
   transition-delay: 0.5s;
 }
+
 .open-article-enter-active {
   transition-property: left;
   transition-duration: 0.5s;
   transition-timing-function: ease;
   width: 100%;
 }
+
 .open-article-enter-from {
   left: 100%;
 }
+
 .open-article-enter-active {
   left: 100%;
 }
+
 .open-article-enter-to {
   left: 0;
 }
+
 .close-article-enter-active {
   transition-delay: 0.5s;
 }
+
 .close-article-enter-active * {
   transition-delay: 0.5s;
 }
+
 .close-article-leave-active {
   transition-property: left;
   transition-duration: 0.5s;
   transition-timing-function: ease;
   width: 100%;
 }
+
 .close-article-leave-from {
   left: 0;
 }
+
 .close-article-leave-active {
   left: 0;
 }
+
 .close-article-leave-to {
   left: 100%;
 }
+
 .close-article-leave-active.root-transition-target,
 .open-article-enter-active.root-transition-target {
   position: fixed;

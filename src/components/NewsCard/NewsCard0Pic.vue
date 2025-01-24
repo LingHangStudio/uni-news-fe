@@ -1,23 +1,24 @@
+<script setup>
+import { defineProps } from 'vue'
+
+defineProps({
+  title: String,
+  time: String
+})
+</script>
+
 <template>
   <div class="news-card-0-pic-wrapper">
     <div class="news-card-0-pic">
       <div class="news-card-0-pic-inner">
-        <div class="news-card-0-pic-title">{{title}}</div>
-        <div class="news-card-0-pic-time">{{time}}</div>
+        <div class="news-card-0-pic-title">{{ title }}</div>
+        <div class="news-card-0-pic-time">{{ time }}</div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'NewsCard0Pic',
-
-  props: ['title', 'time']
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 .news-card-0-pic {
   padding: 0 12px;
 }

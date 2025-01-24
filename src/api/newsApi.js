@@ -1,46 +1,46 @@
-import ApiList from "@/store/ApiList";
-import axios from "axios";
+import ApiList from '@/stores/ApiList'
+import axios from 'axios'
 
-var newsAxios = axios.create({
-  baseURL: "https://wust-news.api.monkeyhbd.cn/v1/api/",
+const newsAxios = axios.create({
+  baseURL: 'https://wust-news.api.monkeyhbd.cn/v1/api/',
   timeout: 5000,
-});
+})
 
 async function newsList(partName, subName, num, page) {
-  var part = ApiList[partName][subName][0];
-  var sub = ApiList[partName][subName][1];
+  const part = ApiList[partName][subName][0]
+  const sub = ApiList[partName][subName][1]
 
-  var promise = newsAxios.post("/post/news-list", {
+  const promise = newsAxios.post('/post/news-list', {
     part: part,
     sub: sub,
     num: num,
     page: page,
-  });
-  return promise;
+  })
+  return promise
 }
 
 async function newsContent(id) {
-  var promise = newsAxios.post("/post/news-content", {
+  const promise = newsAxios.post('/post/news-content', {
     id: id,
-  });
-  return promise;
+  })
+  return promise
 }
 
 async function houseNews(house, sub, num, page) {
-  var promise = newsAxios.post("/post/house-news", {
+  const promise = newsAxios.post('/post/house-news', {
     house: house,
     sub: sub,
     num: num,
     page: page,
-  });
-  return promise;
+  })
+  return promise
 }
 
 async function houseSub(house) {
-  var promise = newsAxios.post("/post/house-sub", {
+  const promise = newsAxios.post('/post/house-sub', {
     house: house,
-  });
-  return promise;
+  })
+  return promise
 }
 
 export default {
@@ -48,4 +48,4 @@ export default {
   newsContent,
   houseNews,
   houseSub,
-};
+}

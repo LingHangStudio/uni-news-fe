@@ -1,27 +1,225 @@
+<script setup>
+import newsApi from '@/api/newsApi'
+import NewsCard0Pic from '@/components/NewsCard/NewsCard0Pic.vue'
+import NewsCard1Pic from '@/components/NewsCard/NewsCard1Pic.vue'
+import NewsCard3Pic from '@/components/NewsCard/NewsCard3Pic.vue'
+import ArticleStore from '@/stores/ArticleStore'
+import { ref, defineProps, onActivated, onDeactivated } from 'vue'
+import { useRouter } from 'vue-router';
+
+const { partName, subName, typeName } = defineProps({
+  typeName: String,
+  partName: String,
+  subName: String
+})
+
+const router = useRouter()
+const status = ref('created')
+const page = ref(0)
+const newsList = ref([])
+const updateTouchStartPosition = ref(-100)
+let appendingTimer = ref(null)
+
+const init = async () => {
+  let promise = null
+  if (typeName == 1) {
+    promise = newsApi.newsList(partName, subName, 20, 0)
+  }
+  else if (typeName == 2) {
+    promise = newsApi.houseNews(partName, subName, 20, 0)
+  }
+  try {
+    const res = await promise
+    newsList.value = res.data.newsList
+    status.value = 'initiated'
+    page.value = res.data.page
+  } catch (error) {
+    console.error('Error:', error)
+    status.value = 'initial-error'
+  }
+  return promise
+}
+
+const append = async () => {
+  let promise = null
+  if (typeName == 1) {
+    promise = newsApi.newsList(partName, subName, 20, page.value + 1)
+  }
+  else if (typeName == 2) {
+    promise = newsApi.houseNews(partName, subName, 20, page.value + 1)
+  }
+  status.value = 'appending'
+  try {
+    const res = await promise
+    const appendNewsList = res.data.newsList
+    if (appendNewsList == 0) {
+      status.value = 'no-more'
+    }
+    else {
+      newsList.value.push(...appendNewsList)
+      status.value = 'appended'
+      page.value = res.data.page
+    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+const is3PicCard = (piclist) => {
+  return piclist.length >= 3
+}
+
+const is1PicCard = (piclist) => {
+  return (1 <= piclist.length && piclist.length <= 2)
+}
+
+const openArticle = (obj) => {
+  ArticleStore[obj.id] = obj
+  router.push({
+    name: 'article',
+    params: {
+      id: obj.id
+    }
+  })
+}
+
+//使用new URL .herf
+const picUrl = (originUrl) => {
+  if (originUrl.endsWith('_ueditor/themes/default/images/icon_doc.gif')) {
+    return new URL('@/assets/img/img-word.png', import.meta.url).href
+  } else if (originUrl.endsWith('_ueditor/themes/default/images/icon_rar.gif')) {
+    return new URL('@/assets/img/img-zip.png', import.meta.url).href
+  } else if (originUrl.endsWith('_ueditor/themes/default/images/icon_xls.gif')) {
+    return new URL('@/assets/img/img-excel.png', import.meta.url).href
+  } else if (originUrl.endsWith('_ueditor/themes/default/images/icon_pdf.gif')) {
+    return new URL('@/assets/img/img-pdf.png', import.meta.url).href
+  } else if (originUrl.endsWith('_ueditor/themes/default/images/icon_ppt.gif')) {
+    return new URL('@/assets/img/img-ppt.png', import.meta.url).href
+  } else {
+    return originUrl
+  }
+}
+
+const strDate = (year, month, day) => {
+  let today = new Date()
+  let publishDate = new Date(year, month - 1, day)
+  let dateStr = ''
+  if (year == today.getFullYear()) {
+    dateStr = `${month}月${day}日`
+  }
+  else {
+    dateStr = `${year}年${month}月${day}日`
+  }
+  let diffDay = (today - publishDate) / 1000 / 60 / 60 / 24
+  if (diffDay < 1) {
+    dateStr = '今天'
+  }
+  else if (diffDay < 2) {
+    dateStr = '昨天'
+  }
+  else if (diffDay < 3) {
+    dateStr = '前天'
+  }
+  return dateStr
+}
+
+const touchstartHandle = (e) => {
+  const contents = document.getElementById('contents')
+  if (contents.scrollTop == 0) {
+    updateTouchStartPosition.value.value = e.touches[0].pageY
+  }
+  const updateIndicator = document.getElementById('update-indicator')
+  updateIndicator.style.transition = ''
+}
+
+const touchmoveHandle = (e) => {
+  if (updateTouchStartPosition.value.value > 0) {
+    const offset = e.touches[0].pageY - updateTouchStartPosition.value.value
+    const indicatorTop = 0 + offset * 0.5
+    const updateIndicator = document.getElementById('update-indicator')
+    updateIndicator.style.top = `${indicatorTop}px`
+  }
+}
+
+const touchendHandle = async () => {
+  const updateIndicator = document.getElementById('update-indicator')
+  if (updateIndicator.offsetTop > 70) {  // 刷新页面
+    document.getElementsByClassName('update-inner')[0].style.animation = 'circle 1s infinite linear'
+    try {
+      await init()
+      setTimeout(() => {
+        updateIndicator.style.top = '0px'
+        setTimeout(() => {
+          document.getElementsByClassName('update-inner')[0].style.animation = ''
+        }, 300)
+      }, 500)
+    } catch (error) {
+      console.error(error)
+    }
+
+    updateIndicator.style.transition = 'top 0.3s'
+    updateIndicator.style.top = '70px'
+  }
+  else {
+    updateIndicator.style.transition = 'top 0.3s'
+    updateIndicator.style.top = '0px'
+  }
+  updateTouchStartPosition.value = -100
+}
+
+const isNearBottom = (scrollElement, bottom) => {
+  return (scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight <= bottom)
+}
+
+const appendingTimerHandle = () => {
+  const contents = document.getElementById('contents')
+  if (isNearBottom(contents, 30)) {
+    console.log('Near Bottom.')
+    if (status.value == 'initiated' || status.value == 'appended') {
+      append()
+    }
+  }
+}
+
+onActivated(() => {
+  if (status.value == 'created') {
+    status.value = 'loading'
+    init()
+  }
+  const updateIndicator = document.getElementById('update-indicator')
+  updateIndicator.style.top = '0px'
+  const contents = document.getElementById('contents')
+  contents.addEventListener('touchstart', touchstartHandle)
+  contents.addEventListener('touchmove', touchmoveHandle)
+  contents.addEventListener('touchend', touchendHandle)
+  appendingTimer.value = setInterval(appendingTimerHandle, 500)
+})
+
+onDeactivated(() => {
+  const contents = document.getElementById('contents')
+  contents.removeEventListener('touchstart', touchstartHandle)
+  contents.removeEventListener('touchmove', touchmoveHandle)
+  contents.removeEventListener('touchend', touchendHandle)
+  clearInterval(appendingTimer.value)
+})
+</script>
+
 <template>
   <div class="card-gallery">
-    <div v-if="status=='loading'" class="load-container">
+    <div v-if="status == 'loading'" class="load-container">
       <span class="load"></span>
     </div>
-    <div v-if="status=='initial-error'">加载错误</div>
-    <div class="news-card-selector" v-for="obj in newsList" v-on:click="openArticle(obj)" v-bind:key="obj.id">
+    <div v-if="status == 'initial-error'">加载错误</div>
+    <div class="news-card-selector" v-for="obj in newsList" @click="openArticle(obj)" :key="obj.id">
       <div class="news-card-selector-inner">
-        <NewsCard3Pic
-          v-if="is3PicCard(obj.picList)"
-          v-bind:title="obj.title"
-          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
-          v-bind:pic-1-src="picUrl(obj.picList[0])"
-          v-bind:pic-2-src="picUrl(obj.picList[1])"
-          v-bind:pic-3-src="picUrl(obj.picList[2])"></NewsCard3Pic>
-        <NewsCard1Pic
-          v-else-if="is1PicCard(obj.picList)"
-          v-bind:title="obj.title"
-          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"
-          v-bind:pic-src="picUrl(obj.picList[0])"></NewsCard1Pic>
-        <NewsCard0Pic
-          v-else
-          v-bind:title="obj.title"
-          v-bind:time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])"></NewsCard0Pic>
+        <NewsCard3Pic v-if="is3PicCard(obj.picList)" :title="obj.title"
+          :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])" :pic-1-src="picUrl(obj.picList[0])"
+          :pic-2-src="picUrl(obj.picList[1])" :pic-3-src="picUrl(obj.picList[2])"></NewsCard3Pic>
+        <NewsCard1Pic v-else-if="is1PicCard(obj.picList)" :title="obj.title"
+          :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])" :pic-src="picUrl(obj.picList[0])">
+        </NewsCard1Pic>
+        <NewsCard0Pic v-else :title="obj.title" :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])">
+        </NewsCard0Pic>
       </div>
       <div class="news-card-divider">
         <div class="news-card-divider-inner"></div>
@@ -43,252 +241,7 @@
   </div>
 </template>
 
-<script>
-import newsApi from '@/api/newsApi'
-import NewsCard0Pic from '@/components/NewsCard/NewsCard0Pic.vue'
-import NewsCard1Pic from '@/components/NewsCard/NewsCard1Pic.vue'
-import NewsCard3Pic from '@/components/NewsCard/NewsCard3Pic.vue'
-import ArticleStore from '@/store/ArticleStore'
-import router from '@/router'
-
-export default {
-  name: 'CardGallery',
-
-  components: {
-    NewsCard0Pic: NewsCard0Pic,
-    NewsCard1Pic: NewsCard1Pic,
-    NewsCard3Pic: NewsCard3Pic
-  },
-
-  props: ['typeName', 'partName', 'subName'],
-
-  data: function() {
-    return {
-      // created
-      // loading
-      // initiated
-      // initial-error
-      // appending
-      // no-more
-      // appended
-      // append-error
-      status: 'created',
-
-      page: 0,
-
-      newsList: [
-      ],
-
-      updateTouchStartPosition: -100,
-
-      appendingTimer: null
-    }
-  },
-
-  methods: {
-    init: async function(idx=0) {
-      var that = this
-      var promise = null
-      if (this.typeName == 1) {
-        promise = newsApi.newsList(this.partName, this.subName, 20, 0)
-      }
-      else if (this.typeName == 2) {
-        promise = newsApi.houseNews(this.partName, this.subName, 20, 0)
-      }
-      promise.then(function(res) {
-        console.log(res.data)
-        that.newsList = res.data.newsList
-        that.status = 'initiated'
-        that.page = res.data.page
-      })
-      promise.catch(function(err) {
-        console.log('Error:', err)
-        that.status = 'initial-error'
-      })
-      return promise
-    },
-
-    append: async function(idx=0) {
-      var that = this
-      var promise = null
-      if (this.typeName == 1) {
-        promise = newsApi.newsList(this.partName, this.subName, 20, that.page + 1)
-      }
-      else if (this.typeName == 2) {
-        promise = newsApi.houseNews(this.partName, this.subName, 20, that.page + 1)
-      }
-      that.status = 'appending'
-      promise.then(function(res) {
-        console.log(res.data)
-        var appendNewsList = res.data.newsList
-        if (appendNewsList == 0) {
-          that.status = 'no-more'
-        }
-        else {
-          for (var i = 0; i < appendNewsList.length; i += 1) {
-            that.newsList.push(appendNewsList[i])
-          }
-          that.status = 'appended'
-          that.page = res.data.page
-        }
-      })
-    },
-
-    is3PicCard: function(piclist) {
-      if (piclist.length >= 3) {
-        return true
-      }
-      return false
-    },
-
-    is1PicCard: function(piclist) {
-      if (1 <= piclist.length && piclist.length <= 2) {
-        return true
-      }
-    },
-
-    openArticle: function(obj) {
-      ArticleStore[obj.id] = obj
-      router.push({
-        name: 'article',
-        params: {
-          id: obj.id
-        }
-      })
-    },
-
-    picUrl: function(originUrl) {
-      if (originUrl.endsWith('_ueditor/themes/default/images/icon_doc.gif')) {
-        return require('@/assets/img/img-word.png')
-      }
-      else if (originUrl.endsWith('_ueditor/themes/default/images/icon_rar.gif')) {
-        return require('@/assets/img/img-zip.png')
-      }
-      else if (originUrl.endsWith('_ueditor/themes/default/images/icon_xls.gif')) {
-        return require('@/assets/img/img-excel.png')
-      }
-      else if (originUrl.endsWith('_ueditor/themes/default/images/icon_pdf.gif')) {
-        return require('@/assets/img/img-pdf.png')
-      }
-      else if (originUrl.endsWith('_ueditor/themes/default/images/icon_ppt.gif')) {
-        return require('@/assets/img/img-ppt.png')
-      }
-      else {
-        return originUrl
-      }
-    },
-
-    strDate: function(year, month, day) {
-      var today = new Date()
-      var publishDate = new Date(year, month-1, day)
-      var dateStr = ''
-      if (year == today.getFullYear()) {
-        dateStr = `${month}月${day}日`
-      }
-      else {
-        dateStr = `${year}年${month}月${day}日`
-      }
-      var diffDay = (today - publishDate) / 1000 / 60 / 60 / 24
-      if (diffDay < 1) {
-        dateStr = '今天'
-      }
-      else if (diffDay < 2) {
-        dateStr = '昨天'
-      }
-      else if (diffDay < 3) {
-        dateStr = '前天'
-      }
-      return dateStr
-    },
-
-    touchstartHandle: function(e) {
-      var contents = document.getElementById('contents')
-      if (contents.scrollTop == 0) {
-        this.updateTouchStartPosition = e.touches[0].pageY
-      }
-      var updateIndicator = document.getElementById('update-indicator')
-      updateIndicator.style.transition = ''
-    },
-
-    touchmoveHandle: function(e) {
-      if (this.updateTouchStartPosition > 0) {
-        var offset = e.touches[0].pageY - this.updateTouchStartPosition
-        var indicatorTop = 0 + offset * 0.5
-        var updateIndicator = document.getElementById('update-indicator')
-        updateIndicator.style.top = `${indicatorTop}px`
-      }
-    },
-
-    touchendHandle: function(e) {
-      var updateIndicator = document.getElementById('update-indicator')
-      if (updateIndicator.offsetTop > 70) {  // 刷新页面
-        document.getElementsByClassName('update-inner')[0].style.animation = 'circle 1s infinite linear'
-        this.init().then(
-          function() {
-            setTimeout(function() {
-              updateIndicator.style.top = '0px'
-              setTimeout(function() {
-                document.getElementsByClassName('update-inner')[0].style.animation = ''
-              }, 300)
-            }, 500)
-          }
-        )
-        updateIndicator.style.transition = 'top 0.3s'
-        updateIndicator.style.top = '70px'
-      }
-      else {
-        updateIndicator.style.transition = 'top 0.3s'
-        updateIndicator.style.top = '0px'
-      }
-      this.updateTouchStartPosition = -100
-    },
-
-    isNearBottom: function(scrollElement, bottom) {
-      if (scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight <= bottom) {
-        return true
-      }
-      else {
-        return false
-      }
-    },
-
-    appendingTimerHandle: function() {
-      var contents = document.getElementById('contents')
-      if (this.isNearBottom(contents, 30)) {
-        console.log('Near Bottom.')
-        if (this.status == 'initiated' || this.status == 'appended') {
-          this.append()
-        }
-      }
-    }
-  },
-
-  activated: function() {
-    console.log('status:', this.status)
-    if (this.status == 'created') {
-      this.status = 'loading'
-      this.init()
-    }
-    var updateIndicator = document.getElementById('update-indicator')
-    updateIndicator.style.top = '0px'
-    var contents = document.getElementById('contents')
-    contents.addEventListener('touchstart', this.touchstartHandle)
-    contents.addEventListener('touchmove', this.touchmoveHandle)
-    contents.addEventListener('touchend', this.touchendHandle)
-    this.appendingTimer = setInterval(this.appendingTimerHandle, 500)
-  },
-
-  deactivated: function() {
-    var contents = document.getElementById('contents')
-    contents.removeEventListener('touchstart', this.touchstartHandle)
-    contents.removeEventListener('touchmove', this.touchmoveHandle)
-    contents.removeEventListener('touchend', this.touchendHandle)
-    clearInterval(this.appendingTimer)
-  }
-}
-</script>
-
-<style>
+<style lang="scss" scoped>
 /* Loading Animation */
 .load-container {
   display: block;
@@ -317,6 +270,7 @@ export default {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(-360deg)
   }

@@ -1,3 +1,31 @@
+<script setup>
+import { ref, onActivated, onDeactivated, watch } from 'vue'
+import { useRoute } from 'vue-router';
+
+const scrollTopMemery = ref(0)
+const route = useRoute()
+
+onActivated(() => {
+  const thisWindow = document.getElementsByClassName('contents')[0]
+  thisWindow.scrollTop = scrollTopMemery.value
+  console.log(thisWindow.scrollTop)
+})
+
+onDeactivated(() => {
+  const thisWindow = document.getElementsByClassName('contents')[0]
+  scrollTopMemery.value = thisWindow.scrollTop
+  console.log(thisWindow.scrollTop)
+})
+
+watch(route, (to, from) => {
+  const thisWindow = document.getElementsByClassName('contents')[0]
+  const partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
+  if (partNames.indexOf(to.name) != -1 && partNames.indexOf(from.name) != -1 && to.name != from.name) {
+    thisWindow.scrollTop = 0
+  }
+})
+</script>
+
 <template>
   <div id="contents" class="contents">
     <div class="horizon-menu">
@@ -20,43 +48,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Contents',
 
-  data: function() {
-    return {
-      'scrollTopMemery': 0
-    }
-  },
-
-  activated: function() {
-    var thisWindow = document.getElementsByClassName('contents')[0]
-    thisWindow.scrollTop = this.scrollTopMemery
-    console.log(thisWindow.scrollTop)
-  },
-
-  deactivated: function() {
-    var thisWindow = document.getElementsByClassName('contents')[0]
-    this.scrollTopMemery = thisWindow.scrollTop
-    console.log(thisWindow.scrollTop)
-  },
-
-  watch: {
-    $route(to, from) {
-      console.log('From:', from.name)
-      console.log('To:', to.name)
-      var thisWindow = document.getElementsByClassName('contents')[0]
-      var partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
-      if (partNames.indexOf(to.name) != -1 && partNames.indexOf(from.name) != -1 && to.name != from.name) {
-        thisWindow.scrollTop = 0
-      }
-    }
-  }
-}
-</script>
-
-<style>
+<style lang="scss">
 .contents {
   position: fixed;
   width: 100%;
@@ -118,12 +111,14 @@ export default {
 .horizon-menu-inner-2 {
   display: block;
   overflow-x: auto;
-  scrollbar-width: none;  /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
   padding: 10px 0;
 }
 
 .horizon-menu-inner-2::-webkit-scrollbar {
-  display: none;  /* Chrome Safari */
+  display: none;
+  /* Chrome Safari */
 }
 
 .router-link-set-2 {
