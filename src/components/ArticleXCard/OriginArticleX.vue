@@ -1,9 +1,9 @@
 <template>
-	<div class="article-link-container">
+  <div class="article-link-container">
     <div class="article-link-bar">
       <div class="article-link-bar-title">原文</div>
       <div class="article-link-bar-text">
-        <span>{{originHref}}</span>
+        <span>{{ originHref }}</span>
       </div>
       <div class="article-link-bar-widgets">
         <div class="article-link-bar-widget-copy-text" v-on:click="copyHrefToClipboard()">
@@ -21,7 +21,7 @@ export default {
   props: ['originHref'],
 
   methods: {
-    copyToClipboard: function(text) {
+    copyToClipboard: function (text) {
       var tmp = document.createElement('input')
       tmp.style = 'position: fixed; z-index: -100;'
       document.body.appendChild(tmp)
@@ -31,7 +31,7 @@ export default {
       document.body.removeChild(tmp)
     },
 
-    copyHrefToClipboard: function() {
+    copyHrefToClipboard: function () {
       this.copyToClipboard(document.querySelector('.article-link-bar-text span').innerHTML)
       // this.showMessageBox()
       this.$emit('showMessageBox')
