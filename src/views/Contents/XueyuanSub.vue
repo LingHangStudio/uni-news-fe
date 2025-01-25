@@ -8,15 +8,13 @@ const subName = () => {
   return route.params.sub
 }
 
-const partName = () => {
-  return route.params.part
-}
+
 </script>
 
 <template>
   <div>
     <!-- <keep-alive> -->
-    <CardGallery type-name="2" :part-name="partName()" :sub-name="subName()"></CardGallery>
+    <CardGallery  :sub-name="subName()"></CardGallery>
     <!-- </keep-alive> -->
   </div>
 </template>

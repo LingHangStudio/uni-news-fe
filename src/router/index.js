@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
 const routes = [
   {
     path: '/',
@@ -8,62 +7,40 @@ const routes = [
   {
     path: '/contents',
     name: 'contents',
+
     component: () => import('../views/ContentsSite.vue'),
-    redirect: '/contents/xuexiao',
     children: [
       {
-        path: '/contents/xuexiao',
-        name: 'xuexiao',
-        component: () => import('../views/Contents/XuexiaoSite.vue'),
-        redirect: '/contents/xuexiao/yaowen',
+        path: '/contents/:part',
+        redirect: to => {
+          const part = to.params.part;
+          return `/contents/${part}/${part}1`;
+        },
+        name: 'part',
+        component: () => import('../views/Contents/PartSite.vue'),
         children: [
           {
-            path: '/contents/xuexiao/:sub',
-            name: 'xuexiao-sub',
-            component: () => import('../views/Contents/XuexiaoSub.vue'),
+            path: '/contents/:part/:sub',
+            name: 'part-sub',
+            component: () => import('../views/Contents/PartSub.vue'),
           },
         ],
       },
       {
-        path: '/contents/jiaowu',
-        name: 'jiaowu',
-        component: () => import('../views/Contents/JiaowuSite.vue'),
-        redirect: '/contents/jiaowu/tongzhigonggao',
+        path: '/contents/X',
+        name: 'X',
+        redirect:'/contents/X/X_1',
         children: [
           {
-            path: '/contents/jiaowu/:sub',
-            name: 'jiaowu-sub',
-            component: () => import('../views/Contents/JiaowuSub.vue'),
-          },
-        ],
-      },
-      {
-        path: '/contents/xueyuan',
-        name: 'xueyuan',
-        component: () => import('../views/Contents/XueyuanSite.vue'),
-        children: [
-          {
-            path: '/contents/xueyuan/:part',
+            path: '/contents/X/:part',
+            component: () => import('../views/Contents/XueyuanSite.vue'),
             children: [
               {
-                path: '/contents/xueyuan/:part/:sub',
-                name: 'xueyuan-sub',
+                path: '/contents/X/:part/:sub',
+                name: 'X-sub',
                 component: () => import('../views/Contents/XueyuanSub.vue'),
               },
             ],
-          },
-        ],
-      },
-      {
-        path: '/contents/tuanwei',
-        name: 'tuanwei',
-        component: () => import('../views/Contents/TuanweiSite.vue'),
-        redirect: '/contents/tuanwei/tuanqing',
-        children: [
-          {
-            path: '/contents/tuanwei/:sub',
-            name: 'tuanwei-sub',
-            component: () => import('../views/Contents/TuanweiSub.vue'),
           },
         ],
       },
@@ -81,8 +58,8 @@ const router = createRouter({
   routes,
 })
 
-router.afterEach((to, from) => {
-  window.scrollTo(0, 0)
-})
+// router.afterEach((to, from) => {
+//   window.scrollTo(0, 0)
+// })
 
 export default router

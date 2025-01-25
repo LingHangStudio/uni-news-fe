@@ -1,33 +1,24 @@
 <script setup>
 import newsApi from '@/api/newsApi'
-import { ref, onMounted, nextTick, watch } from 'vue'
+import { ref, onMounted,watch,nextTick } from 'vue'
 import { useRoute } from 'vue-router';
-
+const houseList=ref([])
+const houseSubList=ref([])
+const houseName=ref('')
+onMounted(async()=>{
+   const res=await newsApi.newsCategories();
+   houseList.value=res.data.house
+   console.log(houseList.value)
+   houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
+})
 const route = useRoute()
 const house = ref(7)
-const houseSubList = ref([])
-const houseDict = ref({
-  1: '材料与冶金学院',
-  2: '城市建设学院',
-  3: '恒大管理学院',
-  4: '国际学院',
-  5: '化学与化工学院',
-  6: '机械自动化学院',
-  7: '计算机科学与技术学院',
-  8: '理学院',
-  9: '马克思主义学院',
-  10: '汽车与交通工程学院',
-  11: '生命科学与健康学院',
-  12: '体育学院',
-  13: '外国语学院',
-  14: '文法与经济学院',
-  15: '信息科学与工程学院',
-  16: '医学院',
-  17: '艺术与设计学院',
-  18: '资源与环境工程学院'
-})
 
-const toggleXueyuanSelector = () => {
+ 
+
+
+const toggleXueyuanSelector = async() => {
+  await updateHouseSub()
   const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
   if (xueyuanSelector.classList.contains('close')) {
     xueyuanSelector.classList.add('open')
@@ -39,7 +30,8 @@ const toggleXueyuanSelector = () => {
   }
 }
 
-const toggleSubSelector = () => {
+const toggleSubSelector = async () => {
+  
   const subSelector = document.getElementsByClassName('sub-selector')[0]
   if (subSelector.classList.contains('close')) {
     subSelector.classList.add('open')
@@ -53,21 +45,24 @@ const toggleSubSelector = () => {
 
 const updateHouseSub = async () => {
   try {
+   
     const res = await newsApi.houseSub(route.params.part)
+    console.log(res)
     house.value = res.data.house
-    houseSubList.value = res.data.subList ? res.data.subList : []
+    houseSubList.value = res.data.result
+    houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
+    console.log(houseSubList.value)
   }
   catch (error) {
     console.error(error)
   }
 }
 
-const houseName = () => {
-  return houseDict.value[route.params.part] || '请选择学院'
-}
+
 
 const subName = () => {
-  const obj = houseSubList.value[route.params.sub - 1]
+  console.log(houseSubList.value)
+  const obj = houseSubList.value.find(item=>item.news===route.params.sub)
   if (obj == null) {
     return null
   }
@@ -84,14 +79,14 @@ onMounted(async () => {
 })
 
 watch(route, async (to, from) => {
-  if ((to.name == 'xueyuan-sub' || to.name == 'xueyuan') && (from.name == 'xueyuan-sub' || from.name == 'xueyuan')) {
+  if ((to.name == 'X-sub' || to.name == 'X') && (from.name == 'X-sub' || from.name == 'X')) {
     if (to.params.part != from.params.part) {
       await updateHouseSub()
     }
   }
   const nameList = ['xuexiao', 'xuexiao-sub', 'jiaowu', 'jiaowu-sub', 'tuanwei', 'tuanwei-sub']
 
-  if (nameList.includes(from.name) && to.name == 'xueyuan') {
+  if (nameList.includes(from.name) && to.name == 'X') {
     await nextTick()
     const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
     if (xueyuanSelector.classList.contains('close')) {
@@ -108,38 +103,20 @@ watch(route, async (to, from) => {
       <div class="xueyuan-menu-bar-inner">
         <div class="xueyuan-selector-container">
           <div class="xueyuan-selector close" @click="toggleXueyuanSelector">
-            <div class="xueyuan-name">{{ houseName() }}</div>
+            <div class="xueyuan-name">{{ houseName }}</div>
             <div class="xueyuan-list">
               <div class="xueyuan-list-column">
-                <router-link to="/contents/xueyuan/1/1">材料与冶金学院</router-link>
-                <router-link to="/contents/xueyuan/2/1">城市建设学院</router-link>
-                <router-link to="/contents/xueyuan/3/1">恒大管理学院</router-link>
-                <router-link to="/contents/xueyuan/4/1">国际学院</router-link>
-                <router-link to="/contents/xueyuan/5/1">化学与化工学院</router-link>
-                <router-link to="/contents/xueyuan/6/1">机械自动化学院</router-link>
-                <router-link to="/contents/xueyuan/7/1">计算机科学与技术学院</router-link>
-                <router-link to="/contents/xueyuan/8/1">理学院</router-link>
-                <router-link to="/contents/xueyuan/9/1">马克思主义学院</router-link>
+                <router-link v-for="item in houseList" :key="item.news" :to="`/contents/X/${item.sub[0].news.substring(0,3)}`">{{item.name}}</router-link>
               </div>
-              <div class="xueyuan-list-column">
-                <router-link to="/contents/xueyuan/10/1">汽车与交通工程学院</router-link>
-                <router-link to="/contents/xueyuan/11/1">生命科学与健康学院</router-link>
-                <router-link to="/contents/xueyuan/12/1">体育学院</router-link>
-                <router-link to="/contents/xueyuan/13/1">外国语学院</router-link>
-                <router-link to="/contents/xueyuan/14/1">文法与经济学院</router-link>
-                <router-link to="/contents/xueyuan/15/1">信息科学与工程学院</router-link>
-                <router-link to="/contents/xueyuan/16/1">医学院</router-link>
-                <router-link to="/contents/xueyuan/17/1">艺术与设计学院</router-link>
-                <router-link to="/contents/xueyuan/18/1">资源与环境工程学院</router-link>
-              </div>
+
             </div>
           </div>
         </div>
         <div class="sub-selector-container">
           <div class="sub-selector close" @click="toggleSubSelector">
-            <div class="sub-name">{{ subName() }}</div>
+            <div class="sub-name">{{subName()}}</div>
             <div class="sub-list">
-              <router-link v-for="obj in houseSubList" :key="obj.sub" :to="`/contents/xueyuan/${house}/${obj.sub}`">
+              <router-link v-for="obj in houseSubList" :key="obj.name" :to="`/contents/X/${route.params.part}/${obj.news}`">
                 {{ obj.name }}
               </router-link>
             </div>
@@ -151,7 +128,7 @@ watch(route, async (to, from) => {
       <router-view v-slot="{ Component }">
         <transition>
           <keep-alive>
-            <component class="slide-target" v-if="route.name == 'xueyuan-sub'" :is="Component" :key="route.fullPath">
+            <component class="slide-target" v-if="route.name == 'X-sub'" :is="Component" :key="route.fullPath">
             </component>
           </keep-alive>
         </transition>

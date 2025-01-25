@@ -3,13 +3,11 @@ import newsApi from '@/api/newsApi'
 import NewsCard0Pic from '@/components/NewsCard/NewsCard0Pic.vue'
 import NewsCard1Pic from '@/components/NewsCard/NewsCard1Pic.vue'
 import NewsCard3Pic from '@/components/NewsCard/NewsCard3Pic.vue'
-import ArticleStore from '@/stores/ArticleStore'
+// import ArticleStore from '@/stores/ArticleStore'
 import { ref, defineProps, onActivated, onDeactivated } from 'vue'
 import { useRouter } from 'vue-router';
 
-const { partName, subName, typeName } = defineProps({
-  typeName: String,
-  partName: String,
+const { subName } = defineProps({
   subName: String
 })
 
@@ -17,19 +15,15 @@ const router = useRouter()
 const status = ref('created')
 const page = ref(0)
 const newsList = ref([])
-const updateTouchStartPosition = ref(-100)
+const uptimeTouchStartPosition = ref(-100)
 let appendingTimer = ref(null)
 
 const init = async () => {
   let promise = null
-  if (typeName == 1) {
-    promise = newsApi.newsList(partName, subName, 20, 0)
-  }
-  else if (typeName == 2) {
-    promise = newsApi.houseNews(partName, subName, 20, 0)
-  }
+  promise = newsApi.newsList(subName, 20, 1)
   try {
     const res = await promise
+    console.log(res)
     newsList.value = res.data.newsList
     status.value = 'initiated'
     page.value = res.data.page
@@ -42,12 +36,7 @@ const init = async () => {
 
 const append = async () => {
   let promise = null
-  if (typeName == 1) {
-    promise = newsApi.newsList(partName, subName, 20, page.value + 1)
-  }
-  else if (typeName == 2) {
-    promise = newsApi.houseNews(partName, subName, 20, page.value + 1)
-  }
+  promise = newsApi.newsList(subName, 20, page.value + 1)
   status.value = 'appending'
   try {
     const res = await promise
@@ -74,7 +63,7 @@ const is1PicCard = (piclist) => {
 }
 
 const openArticle = (obj) => {
-  ArticleStore[obj.id] = obj
+  // ArticleStore[obj.id] = obj
   router.push({
     name: 'article',
     params: {
@@ -100,71 +89,71 @@ const picUrl = (originUrl) => {
   }
 }
 
-const strDate = (year, month, day) => {
+const strtime = (year, month, day) => {
   let today = new Date()
-  let publishDate = new Date(year, month - 1, day)
-  let dateStr = ''
+  let publishtime = new Date(year, month - 1, day)
+  let timeStr = ''
   if (year == today.getFullYear()) {
-    dateStr = `${month}月${day}日`
+    timeStr = `${month}月${day}日`
   }
   else {
-    dateStr = `${year}年${month}月${day}日`
+    timeStr = `${year}年${month}月${day}日`
   }
-  let diffDay = (today - publishDate) / 1000 / 60 / 60 / 24
+  let diffDay = (today - publishtime) / 1000 / 60 / 60 / 24
   if (diffDay < 1) {
-    dateStr = '今天'
+    timeStr = '今天'
   }
   else if (diffDay < 2) {
-    dateStr = '昨天'
+    timeStr = '昨天'
   }
   else if (diffDay < 3) {
-    dateStr = '前天'
+    timeStr = '前天'
   }
-  return dateStr
+  return timeStr
 }
 
 const touchstartHandle = (e) => {
   const contents = document.getElementById('contents')
   if (contents.scrollTop == 0) {
-    updateTouchStartPosition.value.value = e.touches[0].pageY
+    uptimeTouchStartPosition.value.value = e.touches[0].pageY
   }
-  const updateIndicator = document.getElementById('update-indicator')
-  updateIndicator.style.transition = ''
+  const uptimeIndicator = document.getElementById('uptime-indicator')
+  uptimeIndicator.style.transition = ''
 }
 
 const touchmoveHandle = (e) => {
-  if (updateTouchStartPosition.value.value > 0) {
-    const offset = e.touches[0].pageY - updateTouchStartPosition.value.value
+  if (uptimeTouchStartPosition.value.value > 0) {
+    const offset = e.touches[0].pageY - uptimeTouchStartPosition.value.value
     const indicatorTop = 0 + offset * 0.5
-    const updateIndicator = document.getElementById('update-indicator')
-    updateIndicator.style.top = `${indicatorTop}px`
+    const uptimeIndicator = document.getElementById('uptime-indicator')
+    uptimeIndicator.style.top = `${indicatorTop}px`
   }
 }
 
 const touchendHandle = async () => {
-  const updateIndicator = document.getElementById('update-indicator')
-  if (updateIndicator.offsetTop > 70) {  // 刷新页面
-    document.getElementsByClassName('update-inner')[0].style.animation = 'circle 1s infinite linear'
+  const uptimeIndicator = document.getElementById('uptime-indicator')
+  if (uptimeIndicator.offsetTop > 70) {  // 刷新页面
+    document.getElementsByClassName('uptime-inner')[0].style.animation = 'circle 1s infinite linear'
     try {
       await init()
       setTimeout(() => {
-        updateIndicator.style.top = '0px'
+        uptimeIndicator.style.top = '0px'
         setTimeout(() => {
-          document.getElementsByClassName('update-inner')[0].style.animation = ''
+          document.getElementsByClassName('uptime-inner')[0].style.animation = ''
         }, 300)
       }, 500)
     } catch (error) {
       console.error(error)
     }
 
-    updateIndicator.style.transition = 'top 0.3s'
-    updateIndicator.style.top = '70px'
+    uptimeIndicator.style.transition = 'top 0.3s'
+    uptimeIndicator.style.top = '70px'
   }
   else {
-    updateIndicator.style.transition = 'top 0.3s'
-    updateIndicator.style.top = '0px'
+    uptimeIndicator.style.transition = 'top 0.3s'
+    uptimeIndicator.style.top = '0px'
   }
-  updateTouchStartPosition.value = -100
+  uptimeTouchStartPosition.value = -100
 }
 
 const isNearBottom = (scrollElement, bottom) => {
@@ -186,8 +175,8 @@ onActivated(() => {
     status.value = 'loading'
     init()
   }
-  const updateIndicator = document.getElementById('update-indicator')
-  updateIndicator.style.top = '0px'
+  const uptimeIndicator = document.getElementById('uptime-indicator')
+  uptimeIndicator.style.top = '0px'
   const contents = document.getElementById('contents')
   contents.addEventListener('touchstart', touchstartHandle)
   contents.addEventListener('touchmove', touchmoveHandle)
@@ -212,13 +201,13 @@ onDeactivated(() => {
     <div v-if="status == 'initial-error'">加载错误</div>
     <div class="news-card-selector" v-for="obj in newsList" @click="openArticle(obj)" :key="obj.id">
       <div class="news-card-selector-inner">
-        <NewsCard3Pic v-if="is3PicCard(obj.picList)" :title="obj.title"
-          :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])" :pic-1-src="picUrl(obj.picList[0])"
-          :pic-2-src="picUrl(obj.picList[1])" :pic-3-src="picUrl(obj.picList[2])"></NewsCard3Pic>
-        <NewsCard1Pic v-else-if="is1PicCard(obj.picList)" :title="obj.title"
-          :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])" :pic-src="picUrl(obj.picList[0])">
+        <NewsCard3Pic v-if="is3PicCard(obj.other.picList)" :title="obj.title"
+          :time="strtime(obj.time['year'], obj.time['month'], obj.time['day'])" :pic-1-src="picUrl(obj.other.picList[0])"
+          :pic-2-src="picUrl(obj.other.picList[1])" :pic-3-src="picUrl(obj.other.picList[2])"></NewsCard3Pic>
+        <NewsCard1Pic v-else-if="is1PicCard(obj.other.picList)" :title="obj.title"
+          :time="strtime(obj.time['year'], obj.time['month'], obj.time['day'])" :pic-src="picUrl(obj.other.picList[0])">
         </NewsCard1Pic>
-        <NewsCard0Pic v-else :title="obj.title" :time="strDate(obj.date['year'], obj.date['month'], obj.date['day'])">
+        <NewsCard0Pic v-else :title="obj.title" :time="strtime(obj.time['year'], obj.time['month'], obj.time['day'])">
         </NewsCard0Pic>
       </div>
       <div class="news-card-divider">
@@ -236,8 +225,8 @@ onDeactivated(() => {
       已加载全部
     </div>
   </div>
-  <div id="update-indicator" class="update-indicator">
-    <span class="update-inner"></span>
+  <div id="uptime-indicator" class="uptime-indicator">
+    <span class="uptime-inner"></span>
   </div>
 </template>
 
@@ -276,8 +265,8 @@ onDeactivated(() => {
   }
 }
 
-/* Update */
-.update-indicator {
+/* Uptime */
+.uptime-indicator {
   box-sizing: border-box;
   padding: 5px;
   position: fixed;
@@ -293,7 +282,7 @@ onDeactivated(() => {
   margin: 0 auto;
 }
 
-.update-inner {
+.uptime-inner {
   box-sizing: border-box;
   display: inline-block;
   height: 100%;

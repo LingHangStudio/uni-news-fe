@@ -1,15 +1,62 @@
 <script setup>
 import OriginArticleX from '@/components/ArticleXCard/OriginArticleX.vue'
 import newsApi from '@/api/newsApi'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick,watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter()
 const route = useRoute()
-const id = ref('0-0-0-0')
+const id = ref('0')
 const articleObj = ref({})
 const status = ref('created')
 const messageColdDown = ref(false)
+
+
+
+const loadArticle = async (articleId) => {
+  try {
+
+const res = await newsApi.newsContent(articleId)
+status.value = 'loaded'
+articleObj.value = res.data
+console.log(articleObj.value)
+articleObj.value.dateStr = strDate(
+  articleObj.value.date['year'],
+  articleObj.value.date['month'],
+  articleObj.value.date['day']
+)
+const originPiclist = articleObj.value.picList
+await nextTick()
+// Code that will run only after the
+// entire view has been rendered
+const piclist = [...originPiclist];
+const contentElement = document.getElementById('content')
+ficImgSrc(contentElement, piclist)
+clearInlineStyle(contentElement)
+removeBlankLine(contentElement)
+fixAHref(contentElement)
+} catch (error) {
+console.error('Error:', error)
+}
+};
+
+
+watch(() => route.params.id, async (newId, oldId) => {
+  if (newId !== oldId) {
+    id.value = newId;  // 更新 id
+    await loadArticle(id.value)
+  }
+});
+
+
+onMounted(async () => {
+  id.value=route.params.id
+  await loadArticle(id.value)
+});
+
+
+
+
 
 const ficImgSrc = (contentElement, piclist) => {
   const imgs = contentElement.getElementsByTagName('img')
@@ -129,35 +176,11 @@ const copyToClipboard = async (text) => {
   }
 }
 
-onMounted(async () => {
-  id.value = route.params.id
-  try {
-    const res = await newsApi.newsContent(id.value)
-    status.value = 'loaded'
-    articleObj.value = res.data
-    articleObj.value.dateStr = strDate(
-      articleObj.value.date['year'],
-      articleObj.value.date['month'],
-      articleObj.value.date['day']
-    )
-    const originPiclist = articleObj.value.picList
-    await nextTick()
-    // Code that will run only after the
-    // entire view has been rendered
-    const piclist = [...originPiclist];
-    const contentElement = document.getElementById('content')
-    ficImgSrc(contentElement, piclist)
-    clearInlineStyle(contentElement)
-    removeBlankLine(contentElement)
-    fixAHref(contentElement)
-  } catch (error) {
-    console.error('Error:', error)
-  }
-})
+
 </script>
 
 <template>
-  <div class="article-page" :key="route.fullPath">
+  <div class="article-page" :key="route.params.id">
     <div class="article-head-bar">
       <div class="article-head-bar-back-button" @click="goBack">
         <div class="article-head-bar-back-button-inner">

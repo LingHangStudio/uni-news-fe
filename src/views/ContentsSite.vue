@@ -1,9 +1,20 @@
 <script setup>
-import { ref, onActivated, onDeactivated, watch } from 'vue'
+import { ref, onActivated, onDeactivated, watch,onMounted } from 'vue'
 import { useRoute } from 'vue-router';
+import { useRoutesStore } from '@/store';
+import newsApi from '@/api/newsApi'
 
 const scrollTopMemery = ref(0)
 const route = useRoute()
+const routerStore=useRoutesStore()
+const routes=ref([])
+
+onMounted(async()=>{
+   const res=await newsApi.newsCategories();
+   console.log(res)
+   routes.value.push(...res.data.normal,{name:'学院',sub:[{news:'X'}]})
+   routerStore.routes=res.data
+})
 
 onActivated(() => {
   const thisWindow = document.getElementsByClassName('contents')[0]
@@ -31,10 +42,7 @@ watch(route, (to, from) => {
     <div class="horizon-menu">
       <div class="horizon-menu-inner">
         <div class="router-link-set">
-          <router-link to="/contents/xuexiao">学校</router-link>
-          <router-link to="/contents/jiaowu">教务</router-link>
-          <router-link to="/contents/xueyuan">学院</router-link>
-          <router-link to="/contents/tuanwei">团委</router-link>
+          <router-link v-for="(route) in routes" :key="route" :to="`/contents/${route.sub[0].news.substring(0,1)}`" @click="()=>{routerStore.changeRoute(route.name);console.log(routerStore.routeName)}">{{route.name}}</router-link>
         </div>
       </div>
     </div>

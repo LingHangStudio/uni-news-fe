@@ -1,51 +1,43 @@
-import ApiList from '@/stores/ApiList'
+
 import axios from 'axios'
 
 const newsAxios = axios.create({
-  baseURL: 'https://wust-news.api.monkeyhbd.cn/v1/api/',
+  baseURL: 'http://127.0.0.1:3000/api/',
   timeout: 5000,
 })
 
-async function newsList(partName, subName, num, page) {
-  const part = ApiList[partName][subName][0]
-  const sub = ApiList[partName][subName][1]
-
-  const promise = newsAxios.post('/post/news-list', {
-    part: part,
+async function newsList(sub, pageSize, page) {
+  const promise = newsAxios.post('/news-list', {
     sub: sub,
-    num: num,
+    pageSize: pageSize,
     page: page,
   })
   return promise
 }
 
 async function newsContent(id) {
-  const promise = newsAxios.post('/post/news-content', {
+  const promise = newsAxios.post('/news-content', {
     id: id,
   })
   return promise
 }
 
-async function houseNews(house, sub, num, page) {
-  const promise = newsAxios.post('/post/house-news', {
+
+async function houseSub(house) {
+  const promise = newsAxios.post('/house-sub', {
     house: house,
-    sub: sub,
-    num: num,
-    page: page,
   })
   return promise
 }
 
-async function houseSub(house) {
-  const promise = newsAxios.post('/post/house-sub', {
-    house: house,
-  })
+async function newsCategories(){
+  const promise= newsAxios.post('/news-categories')
   return promise
 }
 
 export default {
   newsList,
   newsContent,
-  houseNews,
   houseSub,
+  newsCategories
 }

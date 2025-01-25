@@ -5,20 +5,18 @@ import { useRoute } from 'vue-router';
 const route = useRoute()
 
 const subName = () => {
+  console.log(route.params.sub)
   return route.params.sub
 }
-
 </script>
 
 <template>
   <div>
-    <CardGallery type-name="1" part-name="jiaowu" :sub-name="subName()"></CardGallery>
+    <CardGallery :sub-name="subName()"></CardGallery>
   </div>
 </template>
 
-
-<style lang="scss" scoped>
-/* css没有使用 */
+<style>
 .news-card-wrapper {
   background-color: white;
 }

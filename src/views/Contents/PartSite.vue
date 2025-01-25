@@ -1,20 +1,30 @@
 <script setup>
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router';
-
+import { ref, watch,onMounted } from 'vue'
+import { useRoute} from 'vue-router';
+import {useRoutesStore}from '../../store'
 const route = useRoute()
-const index = ref({
-  'tuanqing': 1,
-  'jicengxinxi': 2,
-  'wenjianziliao': 3,
-  'xueshenghuodong': 4,
-  'redianjujiao': 5,
-  'tashanzhishi': 6
+const routerStore=useRoutesStore()
+const subList=ref([])
+
+onMounted(()=>{
+  
+  subList.value=routerStore.routes.normal.find(item=>item.name==routerStore.routeName).sub
+  console.log(subList.value)
 })
 const transitionName = ref('slide-left')
+const index = ref({
+  'yaowen': 1,
+  'meiti': 2,
+  'xueshu': 3,
+  'zonghe': 4,
+  'yuanxi': 5
+})
 
+watch(() => routerStore.routeName,(newVal)=>{
+  subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
+})
 watch(route, (to, from) => {
-  if (to.name == 'tuanwei-sub' && from.name == 'tuanwei-sub') {
+  if (to.name == 'part-sub' && from.name == 'part-sub') {
     if (index.value[to.params.sub] > index.value[from.params.sub]) {
       transitionName.value = "slide-right"
     } else {
@@ -32,12 +42,7 @@ watch(route, (to, from) => {
     <div class="horizon-menu-2">
       <div class="horizon-menu-inner-2">
         <div class="router-link-set-2">
-          <router-link to="/contents/tuanwei/tuanqing">团情</router-link>
-          <router-link to="/contents/tuanwei/jicengxinxi">基层信息</router-link>
-          <router-link to="/contents/tuanwei/wenjianziliao">文件资料</router-link>
-          <router-link to="/contents/tuanwei/xueshenghuodong">学生活动</router-link>
-          <router-link to="/contents/tuanwei/redianjujiao">热点聚焦</router-link>
-          <router-link to="/contents/tuanwei/tashanzhishi">他山之石</router-link>
+          <router-link v-for="item in subList" :key="item.news" :to="`/contents/${item.news.substring(0,1)}/${item.news}`">{{item.name}}</router-link>
         </div>
       </div>
     </div>
@@ -45,7 +50,7 @@ watch(route, (to, from) => {
       <router-view v-slot="{ Component }">
         <transition :name="transitionName">
           <keep-alive>
-            <component class="slide-target" v-if="route.name == 'tuanwei-sub'" :is="Component" :key="route.fullPath">
+            <component class="slide-target" v-if="route.name == 'part-sub'" :is="Component" :key="route.fullPath">
             </component>
           </keep-alive>
         </transition>
@@ -53,7 +58,6 @@ watch(route, (to, from) => {
     </div>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 /* <transition> */
