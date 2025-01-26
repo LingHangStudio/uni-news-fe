@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onActivated, onDeactivated, watch,onMounted } from 'vue'
+import { ref, onActivated, onDeactivated, watch,onMounted,nextTick } from 'vue'
 import { useRoute } from 'vue-router';
 import { useRoutesStore } from '@/store';
 import newsApi from '@/api/newsApi'
@@ -14,7 +14,8 @@ onMounted(async()=>{
    console.log(res)
    routes.value.push(...res.data.normal,{name:'学院',sub:[{news:'X'}]})
    routerStore.routes=res.data
-   routerStore.routeName=routerStore.routes[0].name
+   nextTick(()=> routerStore.routeName=routerStore.routes.normal[0].name)
+
 })
 
 onActivated(() => {
