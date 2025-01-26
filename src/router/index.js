@@ -1,4 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { useRoutesStore } from '@/store';
+
 const routes = [
   {
     path: '/',
@@ -7,7 +9,11 @@ const routes = [
   {
     path: '/contents',
     name: 'contents',
-
+    redirect:()=>{
+      const routerStore=useRoutesStore()
+      const firstRoute=routerStore.routes.normal[0].sub[0].news.substring(0,1)
+      return `/contents/${firstRoute}`
+    },
     component: () => import('../views/ContentsSite.vue'),
     children: [
       {

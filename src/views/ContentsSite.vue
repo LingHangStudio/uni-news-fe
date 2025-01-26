@@ -14,6 +14,7 @@ onMounted(async()=>{
    console.log(res)
    routes.value.push(...res.data.normal,{name:'学院',sub:[{news:'X'}]})
    routerStore.routes=res.data
+   routerStore.routeName=routerStore.routes[0].name
 })
 
 onActivated(() => {

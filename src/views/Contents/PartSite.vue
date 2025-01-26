@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch,onMounted } from 'vue'
+import { ref, watch,onMounted,nextTick } from 'vue'
 import { useRoute} from 'vue-router';
 import {useRoutesStore}from '../../store'
 const route = useRoute()
@@ -7,24 +7,24 @@ const routerStore=useRoutesStore()
 const subList=ref([])
 
 onMounted(()=>{
-  
+  nextTick(()=>{
   subList.value=routerStore.routes.normal.find(item=>item.name==routerStore.routeName).sub
-  console.log(subList.value)
+  index.value = subList.value.reduce((acc, element, i) => {
+  acc[element.news] = i + 1
+  return acc;
+}, {})
+  console.log(index.value)
+  })
 })
 const transitionName = ref('slide-left')
-const index = ref({
-  'yaowen': 1,
-  'meiti': 2,
-  'xueshu': 3,
-  'zonghe': 4,
-  'yuanxi': 5
-})
+const index = ref({})
 
 watch(() => routerStore.routeName,(newVal)=>{
   subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
 })
 watch(route, (to, from) => {
   if (to.name == 'part-sub' && from.name == 'part-sub') {
+    console.log('to',to.params.sub,'from',from.params.sub)
     if (index.value[to.params.sub] > index.value[from.params.sub]) {
       transitionName.value = "slide-right"
     } else {

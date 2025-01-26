@@ -4,16 +4,24 @@ import { ref, onMounted,watch,nextTick } from 'vue'
 import { useRoute } from 'vue-router';
 const houseList=ref([])
 const houseSubList=ref([])
+const sliceHouseList=ref([])
 const houseName=ref('')
 onMounted(async()=>{
    const res=await newsApi.newsCategories();
    houseList.value=res.data.house
    console.log(houseList.value)
    houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
+   groupHouses()
 })
 const route = useRoute()
 const house = ref(7)
 
+const groupHouses = () => {
+  sliceHouseList.value = [];
+  for (let i = 0; i < houseList.value.length; i += 10) {
+    sliceHouseList.value.push(houseList.value.slice(i, i + 10));
+  }
+};
  
 
 
@@ -105,7 +113,7 @@ watch(route, async (to, from) => {
           <div class="xueyuan-selector close" @click="toggleXueyuanSelector">
             <div class="xueyuan-name">{{ houseName }}</div>
             <div class="xueyuan-list">
-              <div class="xueyuan-list-column">
+              <div class="xueyuan-list-column" v-for="(item,index) in sliceHouseList" :key="index">
                 <router-link v-for="item in houseList" :key="item.news" :to="`/contents/X/${item.sub[0].news.substring(0,3)}`">{{item.name}}</router-link>
               </div>
 
