@@ -213,7 +213,7 @@ const copyToClipboard = async (text) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 @import '@/assets/css/markdown.css';
 
 .article-page {
