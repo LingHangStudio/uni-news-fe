@@ -10,7 +10,7 @@ watch(route, (to) => {
   if (to.name == 'article') {
     transitionName.value = "open-article"
   }
-  else if (to.name == 'part-sub') {
+  else if (to.name == 'part-sub'|| to.name == 'X-sub') {
     transitionName.value = "close-article"
   }
   else {

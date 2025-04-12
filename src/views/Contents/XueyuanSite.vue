@@ -2,11 +2,13 @@
 import newsApi from '@/api/newsApi'
 import { ref, onMounted,watch,nextTick } from 'vue'
 import { useRoute } from 'vue-router';
+const route = useRoute()
 const houseList=ref([])
 const houseSubList=ref([])
 const sliceHouseList=ref([])
 const houseName=ref('')
 const subName=ref('')
+const currentHouse=ref(String(route.params.part))
 
 onMounted(async()=>{
   await updateHouseSub()
@@ -35,7 +37,7 @@ onMounted(async()=>{
 })
 
 
-const route = useRoute()
+
 const house = ref(7)
 
 const groupHouses = () => {
@@ -62,6 +64,9 @@ const toggleXueyuanSelector = async() => {
 }
 
 const toggleSubSelector = async () => {
+  console.log('currentHouse',currentHouse.value)
+  await updateHouseSub()
+  console.log('houseSubList',houseSubList.value)
   nextTick(()=>subName.value=houseSubList.value.find(item=>item.news==route.params.sub).name)
   const subSelector = document.getElementsByClassName('sub-selector')[0]
   if (subSelector.classList.contains('close')) {
@@ -79,7 +84,10 @@ const updateHouseSub = async () => {
    
     const res = await newsApi.houseSub(route.params.part)
     house.value = res.data.house
-    houseSubList.value = res.data.result
+    houseSubList.value = res.data.result.filter(item => getHouseKey(item.news)===currentHouse.value)
+    console.log('currentHouse',currentHouse.value)
+    console.log('res.data.result',res.data.result)
+
     const Sub=houseSubList.value.find(item=>item.news==route.params.sub)
     if(Sub)
     subName.value=Sub.name
@@ -87,7 +95,6 @@ const updateHouseSub = async () => {
     if(House){
     houseName.value=House.name
     }
-    console.log(houseSubList.value)
   }
   catch (error) {
     console.error(error)
@@ -116,6 +123,20 @@ watch(route, async (to, from) => {
     }
   }
 })
+
+watch(()=>route.params.part,async(newVal)=>{
+  await handleClickSelector(newVal)
+})
+
+const getHouseKey = (news) => {
+  return news.length === 6 ? news.substring(0, 4) : news.substring(0, 3)
+}
+
+const handleClickSelector = async(news)=>{
+  console.log('news',news)
+  currentHouse.value=news;
+  console.log('currentHouse',currentHouse.value)
+  await updateHouseSub()}
 </script>
 
 <template>
@@ -127,7 +148,8 @@ watch(route, async (to, from) => {
             <div class="xueyuan-name">{{ houseName }}</div>
             <div class="xueyuan-list">
               <div class="xueyuan-list-column" v-for="(item,index) in sliceHouseList" :key="index">
-                <router-link v-for="item in houseList" :key="item.news" :to="`/contents/X/${item.sub[0].news.substring(0,3)}`">{{item.name}}</router-link>
+                <router-link v-for="house in item" :key="house.news" :to="`/contents/X/${getHouseKey(house.sub[0].news)}`"
+                >{{house.name}}</router-link>
               </div>
 
             </div>
