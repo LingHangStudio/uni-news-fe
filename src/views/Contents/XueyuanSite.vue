@@ -9,7 +9,6 @@ const houseName=ref('')
 onMounted(async()=>{
    const res=await newsApi.newsCategories();
    houseList.value=res.data.house
-   console.log(houseList.value)
    houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
    groupHouses()
 })
@@ -55,11 +54,9 @@ const updateHouseSub = async () => {
   try {
    
     const res = await newsApi.houseSub(route.params.part)
-    console.log(res)
     house.value = res.data.house
     houseSubList.value = res.data.result
     houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
-    console.log(houseSubList.value)
   }
   catch (error) {
     console.error(error)
@@ -69,7 +66,6 @@ const updateHouseSub = async () => {
 
 
 const subName = () => {
-  console.log(houseSubList.value)
   const obj = houseSubList.value.find(item=>item.news===route.params.sub)
   if (obj == null) {
     return null

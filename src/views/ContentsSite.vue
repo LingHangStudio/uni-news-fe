@@ -11,7 +11,6 @@ const routes=ref([])
 
 onMounted(async()=>{
    const res=await newsApi.newsCategories();
-   console.log(res)
    routes.value.push(...res.data.normal,{name:'学院',sub:[{news:'X'}]})
    routerStore.routes=res.data
    nextTick(()=> routerStore.routeName=routerStore.routes.normal[0].name)
@@ -21,13 +20,11 @@ onMounted(async()=>{
 onActivated(() => {
   const thisWindow = document.getElementsByClassName('contents')[0]
   thisWindow.scrollTop = scrollTopMemery.value
-  console.log(thisWindow.scrollTop)
 })
 
 onDeactivated(() => {
   const thisWindow = document.getElementsByClassName('contents')[0]
   scrollTopMemery.value = thisWindow.scrollTop
-  console.log(thisWindow.scrollTop)
 })
 
 watch(route, (to, from) => {
@@ -44,7 +41,7 @@ watch(route, (to, from) => {
     <div class="horizon-menu">
       <div class="horizon-menu-inner">
         <div class="router-link-set">
-          <router-link v-for="(route) in routes" :key="route" :to="`/contents/${route.sub[0].news.substring(0,1)}`" @click="()=>{routerStore.changeRoute(route.name);console.log(routerStore.routeName)}">{{route.name}}</router-link>
+          <router-link v-for="(route) in routes" :key="route" :to="`/contents/${route.sub[0].news.substring(0,1)}`" @click="()=>{routerStore.changeRoute(route.name);}">{{route.name}}</router-link>
         </div>
       </div>
     </div>

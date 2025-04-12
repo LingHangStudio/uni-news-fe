@@ -8,33 +8,48 @@ const subList=ref([])
 
 onMounted(()=>{
   nextTick(()=>{
-  subList.value=routerStore.routes.normal.find(item=>item.name==routerStore.routeName).sub
-  index.value = subList.value.reduce((acc, element, i) => {
-  acc[element.news] = i + 1
-  return acc;
-}, {})
-  console.log(index.value)
+    handleIndex();
   })
 })
 const transitionName = ref('slide-left')
 const index = ref({})
 
-watch(() => routerStore.routeName,(newVal)=>{
-  subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
-})
-watch(route, (to, from) => {
-  if (to.name == 'part-sub' && from.name == 'part-sub') {
-    console.log('to',to.params.sub,'from',from.params.sub)
-    if (index.value[to.params.sub] > index.value[from.params.sub]) {
-      transitionName.value = "slide-right"
-    } else {
-      transitionName.value = "slide-left"
-    }
+
+const handleIndex=()=>{
+  if(routerStore.routes.normal.find(item=>item.name==routerStore.routeName)){
+  subList.value=routerStore.routes.normal.find(item=>item.name==routerStore.routeName).sub
   }
-  else {
-    transitionName.value = "none"
-  }
+  index.value = subList.value.reduce((acc, element, i) => {
+  acc[element.news] = i + 1
+  return acc;
+}, {})
+  console.log(index.value)
+}
+
+watch(() => routerStore.routeName,()=>{
+  handleIndex();
+  // subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
 })
+watch(
+  () => route.params.sub,
+  (newSub, oldSub) => {
+    if (route.name === 'part-sub' && newSub !== oldSub) {
+      console.log('new',newSub)
+      console.log('old',oldSub)
+      if(newSub&&oldSub&&newSub[0]===oldSub[0]){
+        if (index.value[newSub] > index.value[oldSub]) {
+         transitionName.value = "slide-right"
+       } else {
+         transitionName.value = "slide-left"
+       }
+     }else {
+       transitionName.value = "none"
+     }
+  }
+  }
+)
+
+
 </script>
 
 <template>

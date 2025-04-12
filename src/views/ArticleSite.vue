@@ -19,7 +19,6 @@ const loadArticle = async (articleId) => {
 const res = await newsApi.newsContent(articleId)
 status.value = 'loaded'
 articleObj.value = res.data
-console.log(articleObj.value)
 articleObj.value.dateStr = strDate(
   articleObj.value.date['year'],
   articleObj.value.date['month'],
@@ -98,7 +97,6 @@ const clearInlineStyle = (contentElement) => {
     const children = contentElement.children
     if (children != undefined && children.length > 0) {
       for (let idx = 0; idx < children.length; idx += 1) {
-        // console.log(children[idx])
         children[idx].removeAttribute('style')
         children[idx].removeAttribute('width')
         children[idx].removeAttribute('height')
@@ -211,7 +209,7 @@ const copyToClipboard = async (text) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/css/markdown.css';
 
 .article-page {

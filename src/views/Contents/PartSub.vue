@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router';
 const route = useRoute()
 
 const subName = () => {
-  console.log(route.params.sub)
   return route.params.sub
 }
 </script>
