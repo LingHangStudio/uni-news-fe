@@ -51,6 +51,7 @@ watch(() => route.params.id, async (newId) => {
 onMounted(async () => {
   id.value=route.params.id
   await loadArticle(id.value)
+  console.log(articleObj.value)
 });
 
 

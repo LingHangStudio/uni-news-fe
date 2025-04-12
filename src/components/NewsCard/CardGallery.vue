@@ -115,7 +115,7 @@ const strtime = (year, month, day) => {
 const touchstartHandle = (e) => {
   const contents = document.getElementById('contents')
   if (contents.scrollTop == 0) {
-    uptimeTouchStartPosition.value.value = e.touches[0].pageY
+    uptimeTouchStartPosition.value = e.touches[0].pageY
   }
   const uptimeIndicator = document.getElementById('uptime-indicator')
   uptimeIndicator.style.transition = ''

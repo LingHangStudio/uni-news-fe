@@ -5,11 +5,12 @@ import { useRoute } from 'vue-router';
 const transitionName = ref('open-article')
 const route = useRoute()
 
-watch(route, (to, from) => {
+watch(route, (to) => {
+  console.log('route',route.name)
   if (to.name == 'article') {
     transitionName.value = "open-article"
   }
-  else if (from.name == 'article') {
+  else if (to.name == 'part-sub') {
     transitionName.value = "close-article"
   }
   else {

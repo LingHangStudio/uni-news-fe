@@ -11,7 +11,7 @@ onMounted(()=>{
     handleIndex();
   })
 })
-const transitionName = ref('slide-left')
+const transitionName = ref('none')
 const index = ref({})
 
 
@@ -28,11 +28,13 @@ const handleIndex=()=>{
 
 watch(() => routerStore.routeName,()=>{
   handleIndex();
+  console.log(routerStore.routeName)
   // subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
 })
 watch(
   () => route.params.sub,
   (newSub, oldSub) => {
+    console.log(route.name)
     if (route.name === 'part-sub' && newSub !== oldSub) {
       console.log('new',newSub)
       console.log('old',oldSub)
