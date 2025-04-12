@@ -40,8 +40,8 @@ console.error('Error:', error)
 };
 
 
-watch(() => route.params.id, async (newId, oldId) => {
-  if (newId !== oldId) {
+watch(() => route.params.id, async (newId) => {
+  if (newId) {
     id.value = newId;  // 更新 id
     await loadArticle(id.value)
   }
@@ -162,8 +162,10 @@ const strDate = (year, month, day) => {
 }
 
 const goBack = () => {
-  router.back()
+  router.go(-1)
 }
+
+
 
 const copyToClipboard = async (text) => {
   try {
@@ -178,7 +180,7 @@ const copyToClipboard = async (text) => {
 </script>
 
 <template>
-  <div class="article-page" :key="route.params.id">
+  <div class="article-page" v-if="route.name=='article'" :key="route.params.id">
     <div class="article-head-bar">
       <div class="article-head-bar-back-button" @click="goBack">
         <div class="article-head-bar-back-button-inner">
@@ -209,7 +211,7 @@ const copyToClipboard = async (text) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" >
 @import '@/assets/css/markdown.css';
 
 .article-page {

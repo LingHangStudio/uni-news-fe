@@ -40,6 +40,11 @@ const routes = [
           {
             path: '/contents/X/:part',
             component: () => import('../views/Contents/XueyuanSite.vue'),
+            redirect: to => {
+              const part = to.params.part;
+              const sub=to.params.sub || 1;
+              return `/contents/X/${part}/${part}_${sub}`;
+            },
             children: [
               {
                 path: '/contents/X/:part/:sub',

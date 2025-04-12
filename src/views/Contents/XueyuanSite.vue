@@ -6,12 +6,35 @@ const houseList=ref([])
 const houseSubList=ref([])
 const sliceHouseList=ref([])
 const houseName=ref('')
+const subName=ref('')
+
 onMounted(async()=>{
+  await updateHouseSub()
+  const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
+  if (xueyuanSelector.classList.contains('close')) {
+    xueyuanSelector.classList.add('open')
+    xueyuanSelector.classList.remove('close')
+  }
+  else {
+    xueyuanSelector.classList.add('close')
+    xueyuanSelector.classList.remove('open')
+  }
    const res=await newsApi.newsCategories();
    houseList.value=res.data.house
    houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
+   nextTick(()=>subName.value=houseSubList.value.find(item=>item.news==route.params.sub).name)
    groupHouses()
+   watch(route, async () => {
+  await updateHouseSub();
+  const newHouseName = houseList.value.find(item => item.sub[0].news.includes(route.params.part))?.name;
+  if (newHouseName && houseName.value !== newHouseName) {
+    houseName.value = newHouseName;
+  }
+});
+
 })
+
+
 const route = useRoute()
 const house = ref(7)
 
@@ -22,6 +45,7 @@ const groupHouses = () => {
   }
 };
  
+
 
 
 const toggleXueyuanSelector = async() => {
@@ -38,7 +62,7 @@ const toggleXueyuanSelector = async() => {
 }
 
 const toggleSubSelector = async () => {
-  
+  nextTick(()=>subName.value=houseSubList.value.find(item=>item.news==route.params.sub).name)
   const subSelector = document.getElementsByClassName('sub-selector')[0]
   if (subSelector.classList.contains('close')) {
     subSelector.classList.add('open')
@@ -56,7 +80,14 @@ const updateHouseSub = async () => {
     const res = await newsApi.houseSub(route.params.part)
     house.value = res.data.house
     houseSubList.value = res.data.result
-    houseName.value=houseList.value.find(item=>item.sub[0].news.includes(route.params.part)).name
+    const Sub=houseSubList.value.find(item=>item.news==route.params.sub)
+    if(Sub)
+    subName.value=Sub.name
+    const House=houseList.value.find(item=>item.sub[0].news.includes(route.params.part))
+    if(House){
+    houseName.value=House.name
+    }
+    console.log(houseSubList.value)
   }
   catch (error) {
     console.error(error)
@@ -65,24 +96,10 @@ const updateHouseSub = async () => {
 
 
 
-const subName = () => {
-  const obj = houseSubList.value.find(item=>item.news===route.params.sub)
-  if (obj == null) {
-    return null
-  }
-  return obj.name
-}
 
-onMounted(async () => {
-  await updateHouseSub()
-  const xueyuanSelector = document.getElementsByClassName('xueyuan-selector')[0]
-  if (xueyuanSelector.classList.contains('close')) {
-    xueyuanSelector.classList.add('open')
-    xueyuanSelector.classList.remove('close')
-  }
-})
 
 watch(route, async (to, from) => {
+
   if ((to.name == 'X-sub' || to.name == 'X') && (from.name == 'X-sub' || from.name == 'X')) {
     if (to.params.part != from.params.part) {
       await updateHouseSub()
@@ -118,7 +135,7 @@ watch(route, async (to, from) => {
         </div>
         <div class="sub-selector-container">
           <div class="sub-selector close" @click="toggleSubSelector">
-            <div class="sub-name">{{subName()}}</div>
+            <div class="sub-name">{{ subName }}</div>
             <div class="sub-list">
               <router-link v-for="obj in houseSubList" :key="obj.name" :to="`/contents/X/${route.params.part}/${obj.news}`">
                 {{ obj.name }}
