@@ -122,8 +122,8 @@ const touchstartHandle = (e) => {
 }
 
 const touchmoveHandle = (e) => {
-  if (uptimeTouchStartPosition.value.value > 0) {
-    const offset = e.touches[0].pageY - uptimeTouchStartPosition.value.value
+  if (uptimeTouchStartPosition.value > 0) {
+    const offset = e.touches[0].pageY - uptimeTouchStartPosition.value
     const indicatorTop = 0 + offset * 0.5
     const uptimeIndicator = document.getElementById('uptime-indicator')
     uptimeIndicator.style.top = `${indicatorTop}px`
