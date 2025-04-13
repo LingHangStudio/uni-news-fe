@@ -23,7 +23,7 @@ const init = async () => {
   promise = newsApi.newsList(subName, 20, 1)
   try {
     const res = await promise
-    console.log(res)
+    // console.log(res)
     newsList.value = res.data.newsList
     status.value = 'initiated'
     page.value = res.data.page

@@ -23,21 +23,21 @@ const handleIndex=()=>{
   acc[element.news] = i + 1
   return acc;
 }, {})
-  console.log(index.value)
+  // console.log(index.value)
 }
 
 watch(() => routerStore.routeName,()=>{
   handleIndex();
-  console.log(routerStore.routeName)
+  // console.log(routerStore.routeName)
   // subList.value=routerStore.routes.normal.find(item=>item.name==newVal).sub
 })
 watch(
   () => route.params.sub,
   (newSub, oldSub) => {
-    console.log(route.name)
+    // console.log(route.name)
     if (route.name === 'part-sub' && newSub !== oldSub) {
-      console.log('new',newSub)
-      console.log('old',oldSub)
+      // console.log('new',newSub)
+      // console.log('old',oldSub)
       if(newSub&&oldSub&&newSub[0]===oldSub[0]){
         if (index.value[newSub] > index.value[oldSub]) {
          transitionName.value = "slide-right"

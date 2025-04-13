@@ -64,9 +64,9 @@ const toggleXueyuanSelector = async() => {
 }
 
 const toggleSubSelector = async () => {
-  console.log('currentHouse',currentHouse.value)
+  // console.log('currentHouse',currentHouse.value)
   await updateHouseSub()
-  console.log('houseSubList',houseSubList.value)
+  // console.log('houseSubList',houseSubList.value)
   nextTick(()=>subName.value=houseSubList.value.find(item=>item.news==route.params.sub).name)
   const subSelector = document.getElementsByClassName('sub-selector')[0]
   if (subSelector.classList.contains('close')) {
@@ -85,8 +85,8 @@ const updateHouseSub = async () => {
     const res = await newsApi.houseSub(route.params.part)
     house.value = res.data.house
     houseSubList.value = res.data.result.filter(item => getHouseKey(item.news)===currentHouse.value)
-    console.log('currentHouse',currentHouse.value)
-    console.log('res.data.result',res.data.result)
+    // console.log('currentHouse',currentHouse.value)
+    // console.log('res.data.result',res.data.result)
 
     const Sub=houseSubList.value.find(item=>item.news==route.params.sub)
     if(Sub)
@@ -133,9 +133,9 @@ const getHouseKey = (news) => {
 }
 
 const handleClickSelector = async(news)=>{
-  console.log('news',news)
+  // console.log('news',news)
   currentHouse.value=news;
-  console.log('currentHouse',currentHouse.value)
+  // console.log('currentHouse',currentHouse.value)
   await updateHouseSub()}
 </script>
 
