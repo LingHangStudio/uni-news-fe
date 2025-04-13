@@ -230,7 +230,7 @@ onDeactivated(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 /* Loading Animation */
 .load-container {
   display: block;
