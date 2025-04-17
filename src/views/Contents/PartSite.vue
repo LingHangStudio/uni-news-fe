@@ -16,7 +16,7 @@ const index = ref({})
 
 
 const handleIndex=()=>{
-  if(routerStore.routes.normal.find(item=>item.name==routerStore.routeName)){
+  if(routerStore.routes.normal&&routerStore.routes.normal.find(item=>item.name==routerStore.routeName)){
   subList.value=routerStore.routes.normal.find(item=>item.name==routerStore.routeName).sub
   }
   index.value = subList.value.reduce((acc, element, i) => {

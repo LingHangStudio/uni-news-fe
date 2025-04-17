@@ -11,8 +11,12 @@ const routes = [
     name: 'contents',
     redirect:()=>{
       const routerStore=useRoutesStore()
+      if(routerStore.routes.normal){
       const firstRoute=routerStore.routes.normal[0].sub[0].news.substring(0,1)
       return `/contents/${firstRoute}`
+      }else{
+        return `/contents/A`
+      }
     },
     component: () => import('../views/ContentsSite.vue'),
     children: [
