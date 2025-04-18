@@ -20,7 +20,7 @@ let appendingTimer = ref(null)
 
 const init = async () => {
   let promise = null
-  promise = newsApi.newsList(subName, 20, 1)
+  promise = newsApi.newsList(subName, 8, 1)
   try {
     const res = await promise
     // console.log(res)
@@ -36,7 +36,7 @@ const init = async () => {
 
 const append = async () => {
   let promise = null
-  promise = newsApi.newsList(subName, 20, page.value + 1)
+  promise = newsApi.newsList(subName, 8, page.value + 1)
   status.value = 'appending'
   try {
     const res = await promise
