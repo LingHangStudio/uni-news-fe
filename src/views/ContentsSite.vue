@@ -29,10 +29,10 @@ onDeactivated(() => {
 
 watch(route, (to, from) => {
   const thisWindow = document.getElementsByClassName('contents')[0]
-  const partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
-  if (partNames.indexOf(to.name) != -1 && partNames.indexOf(from.name) != -1 && to.name != from.name) {
+  // const partNames = ['xuexiao', 'jiaowu', 'xueyuan', 'tuanwei', 'xuexiao-sub', 'jiaowu-sub', 'xueyuan-sub', 'tuanwei-sub']
+    if(to.name!=='article'||from.name!=='article'){
     thisWindow.scrollTop = 0
-  }
+    }
 })
 </script>
 
